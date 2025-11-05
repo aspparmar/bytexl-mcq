@@ -1,0 +1,404 @@
+
+
+```csv
+title,description,explanation,score,status,difficulty,bloomTaxonomy,tags,subjects,topics,subTopics,companies,option1,option2,option3,option4,answer
+Music Playlist Manager,"**A music streaming app uses a linked list to manage playlists:**
+
+```python
+class Song:
+    def __init__(self, title, artist):
+        self.title = title
+        self.artist = artist
+        self.next = None
+```
+
+**What is the primary advantage of using a linked list over an array for a playlist?**","Linked lists allow O(1) insertion and deletion at any position once you have the reference, and they don't require contiguous memory. Perfect for playlists where songs are frequently added/removed at various positions.",1,published,easy,understand,blank,dsa,blank,blank,blank,Linked lists use less memory than arrays,Songs can be inserted or removed efficiently without shifting elements,Linked lists provide faster search operations,Songs are automatically sorted in linked lists,2
+Browser History Navigation,"**A web browser implements back/forward navigation:**
+
+```python
+class Page:
+    def __init__(self, url):
+        self.url = url
+        self.prev = None
+        self.next = None
+```
+
+**What type of linked list structure is most suitable for browser history with back/forward buttons?**","A doubly linked list allows traversal in both directions - each node has both prev and next pointers, enabling efficient backward (prev) and forward (next) navigation.",1,published,easy,understand,blank,dsa,blank,blank,blank,Singly linked list,Doubly linked list,Circular linked list,Skip list,2
+Train Coach Connection,"**A railway system connects train coaches:**
+
+```python
+class Coach:
+    def __init__(self, coach_number):
+        self.coach_number = coach_number
+        self.next = None
+
+def count_coaches(head):
+    count = 0
+    current = head
+    while current is not None:
+        count += 1
+        current = current.next
+    return count
+```
+
+**If a train has coaches numbered 1→2→3→4→5, what is the time complexity of counting all coaches?**","The function traverses the entire list once, visiting each of the n nodes exactly one time, resulting in O(n) time complexity.",1,published,easy,apply,blank,dsa,blank,blank,blank,O(1),O(log n),O(n),O(n²),3
+Food Delivery Queue,"**A food delivery app manages order queue:**
+
+```python
+class Order:
+    def __init__(self, order_id, customer):
+        self.order_id = order_id
+        self.customer = customer
+        self.next = None
+
+def add_order(head, new_order):
+    if head is None:
+        return new_order
+    current = head
+    while current.next is not None:
+        current = current.next
+    current.next = new_order
+    return head
+```
+
+**What operation does this function perform and what is its time complexity?**","The function traverses to the end of the list (O(n)) and adds the new order at the tail, implementing insertion at the end with O(n) complexity.",1,published,medium,apply,blank,dsa,blank,blank,blank,"Insertion at beginning, O(1)","Insertion at end, O(n)","Insertion at middle, O(log n)","Deletion at end, O(1)",2
+Hospital Patient Record System,"**A hospital maintains patient records in insertion order:**
+
+```python
+class Patient:
+    def __init__(self, patient_id, name):
+        self.patient_id = patient_id
+        self.name = name
+        self.next = None
+
+def insert_at_beginning(head, new_patient):
+    new_patient.next = head
+    return new_patient
+```
+
+**What is the time complexity of inserting a patient at the beginning?**","Inserting at the beginning only requires updating the new node's next pointer and returning the new head. No traversal needed, making it O(1).",1,published,easy,apply,blank,dsa,blank,blank,blank,O(1),O(log n),O(n),O(n²),1
+Video Editing Timeline,"**A video editor uses linked list for clips:**
+
+```python
+def delete_clip(head, clip_id):
+    if head is None:
+        return None
+    
+    if head.clip_id == clip_id:
+        return head.next
+    
+    current = head
+    while current.next is not None:
+        if current.next.clip_id == clip_id:
+            current.next = current.next.next
+            return head
+        current = current.next
+    return head
+```
+
+**What is the worst-case time complexity for deleting a clip?**","In the worst case, the clip to delete is at the end or doesn't exist, requiring traversal of all n nodes, resulting in O(n) time complexity.",1,published,medium,apply,blank,dsa,blank,blank,blank,O(1),O(log n),O(n),O(n²),3
+E-Commerce Shopping Cart,"**An online store manages shopping cart items:**
+
+```python
+class CartItem:
+    def __init__(self, product_id, quantity):
+        self.product_id = product_id
+        self.quantity = quantity
+        self.next = None
+
+def reverse_cart(head):
+    prev = None
+    current = head
+    while current is not None:
+        next_node = current.next
+        current.next = prev
+        prev = current
+        current = next_node
+    return prev
+```
+
+**If the cart has items: A→B→C→D, what will be the order after reversal?**","The reverse function iteratively changes pointers: A←B←C←D, resulting in D→C→B→A. The prev pointer becomes the new head.",1,published,medium,apply,blank,dsa,blank,blank,blank,A→B→C→D,D→C→B→A,A→D→C→B,B→A→D→C,2
+Social Media Friend List,"**A social network finds a specific friend:**
+
+```python
+def find_friend(head, friend_id):
+    current = head
+    position = 0
+    while current is not None:
+        if current.friend_id == friend_id:
+            return position
+        current = current.next
+        position += 1
+    return -1
+```
+
+**In a list of 1000 friends, what is the average-case time complexity?**","On average, the target is found in the middle of the list, requiring traversal of n/2 nodes. This simplifies to O(n) average-case complexity.",1,published,easy,understand,blank,dsa,blank,blank,blank,O(1),O(log n),O(n),O(n²),3
+Task Management System,"**A project manager detects circular dependencies:**
+
+```python
+def detect_cycle(head):
+    slow = head
+    fast = head
+    
+    while fast is not None and fast.next is not None:
+        slow = slow.next
+        fast = fast.next.next
+        if slow == fast:
+            return True
+    return False
+```
+
+**What algorithm does this implement and what is its space complexity?**","This is Floyd's Cycle Detection (tortoise and hare) algorithm. It uses only two pointers regardless of list size, resulting in O(1) space complexity.",1,published,hard,analyze,blank,dsa,blank,blank,blank,"Linear search, O(n) space","Floyd's cycle detection, O(1) space","Binary search, O(log n) space","Hash-based detection, O(n) space",2
+Gaming Leaderboard System,"**A game finds the middle player in rankings:**
+
+```python
+def find_middle_player(head):
+    slow = head
+    fast = head
+    
+    while fast is not None and fast.next is not None:
+        slow = slow.next
+        fast = fast.next.next
+    
+    return slow
+```
+
+**For a list with 7 players, which position will slow pointer reach when fast reaches the end?**","Fast moves 2 steps while slow moves 1. When fast reaches end (position 7), slow will be at middle position 4 (1-indexed) or position 3 (0-indexed).",1,published,medium,apply,blank,dsa,blank,blank,blank,Position 2,Position 3,Position 4,Position 5,3
+Email Thread Manager,"**An email client merges two sorted conversation threads:**
+
+```python
+def merge_threads(list1, list2):
+    dummy = Node(0)
+    current = dummy
+    
+    while list1 is not None and list2 is not None:
+        if list1.timestamp <= list2.timestamp:
+            current.next = list1
+            list1 = list1.next
+        else:
+            current.next = list2
+            list2 = list2.next
+        current = current.next
+    
+    current.next = list1 if list1 is not None else list2
+    return dummy.next
+```
+
+**What is the time complexity of merging two sorted lists of sizes m and n?**","The algorithm traverses both lists once, comparing and linking nodes. Total operations are m + n, resulting in O(m + n) time complexity.",1,published,medium,analyze,blank,dsa,blank,blank,blank,O(m),O(n),O(m + n),O(m * n),3
+Spotify Queue System,"**A music app finds the nth song from the end:**
+
+```python
+def find_nth_from_end(head, n):
+    first = head
+    second = head
+    
+    # Move first pointer n steps ahead
+    for i in range(n):
+        if first is None:
+            return None
+        first = first.next
+    
+    # Move both pointers until first reaches end
+    while first is not None:
+        first = first.next
+        second = second.next
+    
+    return second
+```
+
+**What is the key technique used in this algorithm?**","The algorithm uses two pointers with a gap of n nodes. When the first reaches the end, the second is exactly n positions from the end. Single pass solution.",1,published,medium,understand,blank,dsa,blank,blank,blank,Binary search approach,Two-pointer technique with n-gap,Recursive backtracking,Hash table lookup,2
+Undo/Redo Text Editor,"**A text editor implements undo functionality:**
+
+```python
+class Action:
+    def __init__(self, operation, text):
+        self.operation = operation
+        self.text = text
+        self.next = None
+
+def remove_duplicates(head):
+    current = head
+    while current is not None and current.next is not None:
+        if current.text == current.next.text:
+            current.next = current.next.next
+        else:
+            current = current.next
+    return head
+```
+
+**For a sorted list with actions: Type(A)→Type(A)→Type(B)→Type(C)→Type(C), what remains after removing duplicates?**","The function removes consecutive duplicates: Type(A)→Type(A) becomes Type(A), Type(C)→Type(C) becomes Type(C). Result: Type(A)→Type(B)→Type(C).",1,published,easy,apply,blank,dsa,blank,blank,blank,Type(A)→Type(B)→Type(C),Type(A)→Type(A)→Type(B)→Type(C),Type(B) only,All elements removed,1
+Blockchain Transaction Chain,"**A cryptocurrency system checks if transaction chain is palindrome:**
+
+```python
+def is_palindrome(head):
+    # Find middle
+    slow = fast = head
+    while fast and fast.next:
+        slow = slow.next
+        fast = fast.next.next
+    
+    # Reverse second half
+    prev = None
+    while slow:
+        next_node = slow.next
+        slow.next = prev
+        prev = slow
+        slow = next_node
+    
+    # Compare both halves
+    left, right = head, prev
+    while right:
+        if left.transaction_id != right.transaction_id:
+            return False
+        left = left.next
+        right = right.next
+    return True
+```
+
+**What is the space complexity of this palindrome check?**","The algorithm uses only a constant number of pointers (slow, fast, prev, left, right) regardless of list size, achieving O(1) space complexity.",1,published,hard,analyze,blank,dsa,blank,blank,blank,O(1),O(log n),O(n),O(n²),1
+Ride Sharing Driver Queue,"**A ride-sharing app rotates driver queue:**
+
+```python
+def rotate_queue(head, k):
+    if head is None or k == 0:
+        return head
+    
+    # Find length and last node
+    length = 1
+    last = head
+    while last.next is not None:
+        last = last.next
+        length += 1
+    
+    # Adjust k if larger than length
+    k = k % length
+    if k == 0:
+        return head
+    
+    # Find new tail (at position length - k - 1)
+    new_tail = head
+    for i in range(length - k - 1):
+        new_tail = new_tail.next
+    
+    new_head = new_tail.next
+    new_tail.next = None
+    last.next = head
+    
+    return new_head
+```
+
+**For list 1→2→3→4→5 with k=2, what is the result?**","Rotating right by 2 means last 2 elements move to front: 4→5→1→2→3.",1,published,hard,apply,blank,dsa,blank,blank,blank,2→3→4→5→1,3→4→5→1→2,4→5→1→2→3,5→1→2→3→4,3
+File Download Manager,"**A download manager splits file chunks into two lists:**
+
+```python
+def split_alternate(head):
+    if head is None or head.next is None:
+        return head, None
+    
+    first = head
+    second = head.next
+    
+    current_first = first
+    current_second = second
+    
+    while current_first and current_second:
+        current_first.next = current_second.next
+        current_first = current_first.next
+        if current_first:
+            current_second.next = current_first.next
+            current_second = current_second.next
+    
+    return first, second
+```
+
+**For list 1→2→3→4→5→6, what are the two resulting lists?**","The function splits alternating nodes: odd positions (1,3,5) go to first list, even positions (2,4,6) go to second list.",1,published,medium,apply,blank,dsa,blank,blank,blank,"1→2→3 and 4→5→6","1→3→5 and 2→4→6","1→4 and 2→3→5→6","1→2 and 3→4→5→6",2
+Operating System Process Scheduler,"**An OS schedules processes using circular linked list:**
+
+```python
+class Process:
+    def __init__(self, pid, time_quantum):
+        self.pid = pid
+        self.time_quantum = time_quantum
+        self.next = None
+
+def is_circular(head):
+    if head is None:
+        return False
+    
+    current = head.next
+    while current is not None and current != head:
+        current = current.next
+    
+    return current == head
+```
+
+**What distinguishes a circular linked list from a regular linked list?**","In a circular linked list, the last node's next pointer points back to the head (or any node in the list), forming a cycle. Regular lists have last node pointing to None.",1,published,easy,understand,blank,dsa,blank,blank,blank,All nodes have two pointers,The last node points back to the head instead of None,Nodes are stored in circular buffer,The list can only be traversed in one direction,2
+IoT Sensor Network,"**IoT devices form a linked sensor network:**
+
+```python
+def add_two_numbers(l1, l2):
+    dummy = Node(0)
+    current = dummy
+    carry = 0
+    
+    while l1 or l2 or carry:
+        val1 = l1.val if l1 else 0
+        val2 = l2.val if l2 else 0
+        
+        total = val1 + val2 + carry
+        carry = total // 10
+        current.next = Node(total % 10)
+        
+        current = current.next
+        l1 = l1.next if l1 else None
+        l2 = l2.next if l2 else None
+    
+    return dummy.next
+```
+
+**Given l1: 2→4→3 (represents 342) and l2: 5→6→4 (represents 465), what is the result?**","Addition: 342 + 465 = 807. Stored in reverse: 7→0→8.",1,published,hard,apply,blank,dsa,blank,blank,blank,7→0→8,8→0→7,7→8→0,3→4→7,1
+Document Version Control,"**A version control system finds intersection point:**
+
+```python
+def find_intersection(head1, head2):
+    if head1 is None or head2 is None:
+        return None
+    
+    # Get lengths
+    len1 = get_length(head1)
+    len2 = get_length(head2)
+    
+    # Align both lists
+    diff = abs(len1 - len2)
+    if len1 > len2:
+        head1 = advance(head1, diff)
+    else:
+        head2 = advance(head2, diff)
+    
+    # Find intersection
+    while head1 and head2:
+        if head1 == head2:
+            return head1
+        head1 = head1.next
+        head2 = head2.next
+    
+    return None
+```
+
+**What does the intersection point represent in version control?**","The intersection point is where two separate branches of development merge - the first common commit/node where both version histories share the same subsequent changes.",1,published,medium,understand,blank,dsa,blank,blank,blank,The head of the longer list,The node where two lists merge and become identical,The middle node of combined lists,The last node of the shorter list,2
+Memory Management System,"**A memory allocator uses XOR linked list for space efficiency:**
+
+```
+Pseudocode:
+Node structure:
+    data
+    npx = address(prev) XOR address(next)
+
+Advantages:
+- Saves memory (one pointer instead of two)
+- Allows bidirectional traversal
+- Used in memory-constrained systems
+```
+
+**What is the primary advantage of XOR linked list?**","XOR linked list uses only one pointer field (npx) by storing XOR of previous and next addresses, reducing memory overhead compared to doubly linked lists with two pointers.",1,published,hard,understand,blank,dsa,blank,blank,blank,Faster insertion and deletion,Uses only one pointer field instead of two for doubly linked list,Automatic sorting of elements,Prevents circular references,2
+```
