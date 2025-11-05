@@ -1,0 +1,287 @@
+# C Programming Assessment 12 - File Handling (CSV Format)
+
+Below is your CSV data. **Copy everything from the code block below** and save it as a `.csv` file:
+
+```csv
+title,description,explanation,score,status,difficulty,bloomTaxonomy,tags,subjects,topics,subTopics,companies,option1,option2,option3,option4,answer
+Bookmark Manager,"**A browser bookmark manager saves favorite websites:**
+
+```c
+#include <stdio.h>
+
+int main() {
+    FILE *bookmarks;
+    char url[100], title[50];
+    
+    bookmarks = fopen(""favorites.txt"", ""w"");
+    if(bookmarks == NULL) {
+        printf(""Failed to create bookmark file\n"");
+        return 1;
+    }
+    
+    fprintf(bookmarks, ""https://github.com GitHub\n"");
+    fprintf(bookmarks, ""https://stackoverflow.com Stack Overflow\n"");
+    
+    fclose(bookmarks);
+    return 0;
+}
+```
+
+**What fundamental file operation concept does this demonstrate?**","File handling allows data to be stored permanently on disk, surviving program termination and system restarts, unlike variables in memory which are lost when the program ends.",1,published,easy,understand,blank,c-programming,blank,blank,blank,Files automatically persist data between program runs,File handles must be closed to prevent memory leaks,Text files are faster than binary files,File operations require administrative privileges,1
+Dictionary Lookup,"**A dictionary application searches for word definitions:**
+
+```c
+#include <stdio.h>
+#include <string.h>
+
+int main() {
+    FILE *dictionary;
+    char word[30], definition[100];
+    char search_word[] = ""algorithm"";
+    
+    dictionary = fopen(""words.txt"", ""r"");
+    if(dictionary != NULL) {
+        while(fscanf(dictionary, ""%s %[^\n]"", word, definition) == 2) {
+            if(strcmp(word, search_word) == 0) {
+                printf(""Found: %s - %s\n"", word, definition);
+                break;
+            }
+        }
+        fclose(dictionary);
+    }
+    
+    return 0;
+}
+```
+
+**What happens if ""words.txt"" is empty?**","If the file is empty, the first call to fscanf() will return 0 (no items read), making the condition == 2 false, so the while loop body never executes.",1,published,easy,understand,blank,c-programming,blank,blank,blank,The program crashes,The while loop never executes,fscanf returns an error,An infinite loop occurs,2
+Workout Session Logger,"**A fitness app tracks exercise sessions:**
+
+```c
+#include <stdio.h>
+
+int main() {
+    FILE *fitness_log;
+    char exercise[20];
+    int reps, total_reps = 0;
+    
+    fitness_log = fopen(""workout.txt"", ""r"");
+    if(fitness_log != NULL) {
+        while(fscanf(fitness_log, ""%s %d"", exercise, &reps) == 2) {
+            printf(""%s: %d reps\n"", exercise, reps);
+            total_reps += reps;
+        }
+        printf(""Total workout: %d reps\n"", total_reps);
+        fclose(fitness_log);
+    }
+    
+    return 0;
+}
+```
+
+**If the file contains ""pushups 20\nsitups 30\nsquats 25"", what will be the total reps?**","The program reads each exercise and adds its reps to total_reps: 20 + 30 + 25 = 75 total reps.",1,published,easy,apply,blank,c-programming,blank,blank,blank,20,75,30,25,2
+News Article Archive,"**A news application maintains an article archive:**
+
+```c
+#include <stdio.h>
+
+int main() {
+    FILE *archive;
+    
+    archive = fopen(""news_archive.txt"", ""a"");
+    if(archive != NULL) {
+        fprintf(archive, ""Breaking: New discovery announced\n"");
+        fprintf(archive, ""Sports: Championship game tonight\n"");
+        fclose(archive);
+    }
+    
+    return 0;
+}
+```
+
+**If this program runs multiple times, what happens to the file content?**","Append mode (""a"") adds new content to the end of the file without removing existing content, so each program run adds more articles to the archive.",1,published,medium,understand,blank,c-programming,blank,blank,blank,Only the latest articles remain,"Articles accumulate, creating a growing archive",Previous articles are moved to backup files,The file is reset each time,2
+Photo Gallery Organizer,"**A photo management application creates backup copies:**
+
+```c
+#include <stdio.h>
+
+int main() {
+    FILE *original, *backup;
+    unsigned char pixel_data[2048];
+    size_t bytes_copied;
+    
+    original = fopen(""vacation.jpg"", ""rb"");
+    backup = fopen(""vacation_backup.jpg"", ""wb"");
+    
+    if(original != NULL && backup != NULL) {
+        while((bytes_copied = fread(pixel_data, 1, sizeof(pixel_data), original)) > 0) {
+            fwrite(pixel_data, 1, bytes_copied, backup);
+        }
+        printf(""Photo backup completed\n"");
+    }
+    
+    if(original) fclose(original);
+    if(backup) fclose(backup);
+    
+    return 0;
+}
+```
+
+**Why is binary mode essential for image file operations?**","Image files contain binary data (pixel values, headers, etc.) that would be corrupted by text mode character translations. Binary mode preserves every byte exactly.",1,published,medium,understand,blank,c-programming,blank,blank,blank,Binary mode provides better compression,Images contain non-text data that would be corrupted in text mode,Binary mode offers faster file access,Text mode cannot handle large files,2
+WiFi Connection Monitor,"**A network monitoring tool checks system logs:**
+
+```c
+#include <stdio.h>
+
+int main() {
+    FILE *network_log;
+    
+    network_log = fopen(""/etc/network.log"", ""r"");
+    if(network_log == NULL) {
+        printf(""Access denied - insufficient permissions\n"");
+        printf(""Running in limited mode\n"");
+        return 0;
+    }
+    
+    printf(""Network diagnostics available\n"");
+    fclose(network_log);
+    return 0;
+}
+```
+
+**What error handling principle does this demonstrate?**","When file access fails (due to permissions), the program doesn't crash but continues with reduced functionality, demonstrating robust error handling.",1,published,medium,understand,blank,c-programming,blank,blank,blank,Retrying failed operations automatically,Providing alternative functionality when resources are unavailable,Logging errors to separate files,Requesting elevated permissions from user,2
+Contact Database,"**A contact management system stores user information:**
+
+```c
+#include <stdio.h>
+
+struct Contact {
+    int contact_id;
+    char name[40];
+    char phone[15];
+    char email[50];
+};
+
+int main() {
+    FILE *contacts_db;
+    struct Contact person = {1, ""Sarah Wilson"", ""555-0123"", ""sarah@email.com""};
+    
+    contacts_db = fopen(""contacts.dat"", ""wb"");
+    if(contacts_db != NULL) {
+        fwrite(&person, sizeof(struct Contact), 1, contacts_db);
+        fclose(contacts_db);
+        printf(""Contact saved to database\n"");
+    }
+    
+    return 0;
+}
+```
+
+**What is the key benefit of binary storage for structured data?**","Binary storage preserves exact data representation, uses less space than text format, and maintains the structure's memory layout for efficient access.",1,published,medium,understand,blank,c-programming,blank,blank,blank,Binary files are smaller and maintain data type integrity,Binary files can be opened in text editors,Binary storage automatically encrypts sensitive data,Multiple programs can access binary files simultaneously,1
+Shopping List Parser,"**A grocery shopping application processes item lists:**
+
+```c
+#include <stdio.h>
+
+int main() {
+    FILE *shopping_list;
+    char item[30];
+    int quantity;
+    float price;
+    
+    shopping_list = fopen(""groceries.txt"", ""r"");
+    if(shopping_list != NULL) {
+        while(fscanf(shopping_list, ""%s %d $%f"", item, &quantity, &price) == 3) {
+            printf(""%d x %s at $%.2f each\n"", quantity, item, price);
+        }
+        fclose(shopping_list);
+    }
+    
+    return 0;
+}
+```
+
+**What does checking fscanf(...) == 3 ensure?**","fscanf() returns the number of successfully converted items. Checking == 3 ensures all expected fields were read before processing the shopping item.",1,published,easy,apply,blank,c-programming,blank,blank,blank,Exactly 3 lines are processed,"All three data fields (item, quantity, price) were successfully read",The file contains exactly 3 items,Processing stops after 3 iterations,2
+Survey Result Analyzer,"**A survey analysis tool processes customer feedback:**
+
+```c
+#include <stdio.h>
+
+int main() {
+    FILE *responses, *analysis;
+    int rating, total = 0, count = 0;
+    int ratings[6] = {0};
+    
+    responses = fopen(""survey_data.txt"", ""r"");
+    analysis = fopen(""survey_analysis.txt"", ""w"");
+    
+    if(responses != NULL && analysis != NULL) {
+        while(fscanf(responses, ""%d"", &rating) == 1) {
+            if(rating >= 1 && rating <= 5) {
+                ratings[rating]++;
+                total += rating;
+                count++;
+            }
+        }
+        
+        fprintf(analysis, ""Average Rating: %.2f\n"", (float)total/count);
+        fprintf(analysis, ""5-star reviews: %d\n"", ratings[5]);
+    }
+    
+    if(responses) fclose(responses);
+    if(analysis) fclose(analysis);
+    
+    return 0;
+}
+```
+
+**What type of file processing pattern is demonstrated here?**","The program reads raw survey responses, calculates statistics (average, counts), and generates an analytical summary - a classic data aggregation application.",1,published,hard,analyze,blank,c-programming,blank,blank,blank,File compression and decompression,Data aggregation and statistical analysis,File format conversion,Data backup and synchronization,2
+Text File Splitter,"**A command-line utility splits text files:**
+
+```c
+#include <stdio.h>
+
+int main(int argc, char *argv[]) {
+    FILE *input, *output1, *output2;
+    char line[150];
+    int line_count = 0;
+    
+    if(argc != 4) {
+        printf(""Usage: %s <input_file> <output1> <output2>\n"", argv[0]);
+        return 1;
+    }
+    
+    input = fopen(argv[1], ""r"");
+    output1 = fopen(argv[2], ""w"");
+    output2 = fopen(argv[3], ""w"");
+    
+    if(input != NULL && output1 != NULL && output2 != NULL) {
+        while(fgets(line, sizeof(line), input) != NULL) {
+            if(line_count % 2 == 0) {
+                fputs(line, output1);
+            } else {
+                fputs(line, output2);
+            }
+            line_count++;
+        }
+        printf(""File split completed\n"");
+    }
+    
+    if(input) fclose(input);
+    if(output1) fclose(output1);
+    if(output2) fclose(output2);
+    
+    return 0;
+}
+```
+
+**What does this command-line utility accomplish?**","The program reads lines from input and distributes them alternately: even-numbered lines (0,2,4...) go to output1, odd-numbered lines (1,3,5...) go to output2.",1,published,hard,analyze,blank,c-programming,blank,blank,blank,It merges two files into one larger file,It alternates lines between two output files,It compares the contents of two files,It creates backup copies of important files,2
+```
+
+## Instructions to Save:
+1. **Copy all the text** from the code block above (starting with `title,description...`)
+2. **Open a new file** in VS Code (`Ctrl+N` or `Cmd+N`)
+3. **Paste** the content
+4. **Save as** `c_programming_file_handling.csv` (`Ctrl+S` or `Cmd+S`)
+
+Your CSV with all 10 file handling questions is ready!

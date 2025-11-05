@@ -1,0 +1,292 @@
+title,description,explanation,score,status,difficulty,bloomTaxonomy,tags,subjects,topics,subTopics,companies,option1,option2,option3,option4,answer
+Parking Garage Monitoring,"**A parking garage system tracks vehicle occupancy across multiple levels:**
+
+```c
+#include <stdio.h>
+
+int main() {
+    int parking_spaces[6]; // Array for 6 levels
+    
+    // Initialize occupancy for each level
+    parking_spaces[0] = 45; // Ground level
+    parking_spaces[1] = 38; // Level 1
+    parking_spaces[2] = 42; // Level 2
+    parking_spaces[3] = 35; // Level 3
+    parking_spaces[4] = 28; // Level 4
+    parking_spaces[5] = 15; // Rooftop
+    
+    printf(""Level 2 occupancy: %d cars\n"", parking_spaces[2]);
+    printf(""Rooftop occupancy: %d cars\n"", parking_spaces[5]);
+    
+    return 0;
+}
+```
+
+**What makes arrays ideal for tracking parking data across multiple levels?**","Arrays allow systematic organization of related data (parking occupancy) with level-based indexing. This is much more efficient and maintainable than using separate variables like ground_level, level1, level2, etc., for each parking level.",1,published,easy,understand,blank,c-programming,blank,blank,blank,Arrays automatically count vehicles entering and leaving,Arrays provide organized storage for related data with systematic level-based access,Arrays prevent unauthorized vehicle access,Arrays can only store parking-related information,2
+Delivery Route Planner,"**A delivery company manages package routes and delivery times:**
+
+```c
+#include <stdio.h>
+
+int main() {
+    // Method 1: Declare then assign route IDs
+    int route_ids[4];
+    route_ids[0] = 101;
+    route_ids[1] = 105;
+    
+    // Method 2: Initialize delivery times during declaration
+    int delivery_times[4] = {30, 45, 25, 50}; // minutes
+    
+    // Method 3: Priority routes - size inferred from values
+    int priority_routes[] = {201, 203, 207, 209, 211};
+    
+    printf(""Route 2 delivery time: %d minutes\n"", delivery_times[1]);
+    
+    return 0;
+}
+```
+
+**What will be the output and how many priority routes are defined?**","Array indexing starts at 0, so delivery_times[1] refers to the second element, which is 45. The priority_routes array size is automatically determined by the number of initializers provided (5 elements: 201, 203, 207, 209, 211).",1,published,easy,understand,blank,c-programming,blank,blank,blank,"Route 2 delivery time: 45 minutes, priority_routes has 4 elements","Route 2 delivery time: 45 minutes, priority_routes has 5 elements","Route 2 delivery time: 30 minutes, priority_routes has 5 elements",Compilation error due to inconsistent array sizes,2
+Sudoku Puzzle Solver,"**A Sudoku game represents the puzzle grid using a 2D array:**
+
+```c
+#include <stdio.h>
+
+int main() {
+    int sudoku_grid[4][4] = {
+        {1, 2, 3, 4},
+        {3, 4, 1, 2},
+        {2, 1, 4, 3},
+        {4, 3, 2, 1}
+    };
+    
+    // Check specific positions
+    printf(""Position (1,2): %d\n"", sudoku_grid[1][2]);
+    printf(""Position (3,0): %d\n"", sudoku_grid[3][0]);
+    
+    // Update a position
+    sudoku_grid[2][1] = 9;
+    printf(""Updated position (2,1): %d\n"", sudoku_grid[2][1]);
+    
+    return 0;
+}
+```
+
+**What will be the output of this program?**","sudoku_grid[1][2] accesses row 1, column 2, which contains 1. sudoku_grid[3][0] accesses row 3, column 0, which contains 4. The position (2,1) is updated from 1 to 9.",1,published,medium,apply,blank,c-programming,blank,blank,blank,"Position (1,2): 1, Position (3,0): 4, Updated position (2,1): 9","Position (1,2): 2, Position (3,0): 1, Updated position (2,1): 9","Position (1,2): 1, Position (3,0): 2, Updated position (2,1): 1","Position (1,2): 4, Position (3,0): 4, Updated position (2,1): 9",1
+Weather Data Analysis,"**A meteorology station analyzes weekly weather patterns:**
+
+```c
+#include <stdio.h>
+
+int main() {
+    int daily_rainfall[7] = {5, 12, 0, 8, 15, 3, 7}; // mm per day
+    int total_rainfall = 0;
+    int rainy_days = 0;
+    
+    // Analyze rainfall pattern
+    for (int day = 0; day < 7; day++) {
+        total_rainfall += daily_rainfall[day];
+        if (daily_rainfall[day] > 0) {
+            rainy_days++;
+        }
+        printf(""Day %d: %d mm\n"", day + 1, daily_rainfall[day]);
+    }
+    
+    printf(""Total weekly rainfall: %d mm\n"", total_rainfall);
+    printf(""Number of rainy days: %d\n"", rainy_days);
+    
+    return 0;
+}
+```
+
+**What will be the total weekly rainfall and number of rainy days?**","Total rainfall = 5+12+0+8+15+3+7 = 50 mm. Rainy days are those with rainfall > 0: days 1,2,4,5,6,7 (6 days total). Day 3 had 0 mm, so it doesn't count as a rainy day.",1,published,easy,apply,blank,c-programming,blank,blank,blank,"Total weekly rainfall: 50 mm, Number of rainy days: 6","Total weekly rainfall: 45 mm, Number of rainy days: 7","Total weekly rainfall: 50 mm, Number of rainy days: 7","Total weekly rainfall: 42 mm, Number of rainy days: 5",1
+Event Registration System,"**An event management system adds new registrations to specific time slots:**
+
+```c
+#include <stdio.h>
+
+int main() {
+    int time_slots[10] = {401, 402, 403, 404, 405}; // 5 registrations initially
+    int registration_count = 5;
+    int new_registration = 888;
+    int preferred_slot = 3; // Insert at index 3
+    
+    // Make space for new registration
+    for (int i = registration_count; i > preferred_slot; i--) {
+        time_slots[i] = time_slots[i - 1];
+    }
+    
+    // Add new registration
+    time_slots[preferred_slot] = new_registration;
+    registration_count++;
+    
+    printf(""Registrations after insertion: "");
+    for (int i = 0; i < registration_count; i++) {
+        printf(""%d "", time_slots[i]);
+    }
+    printf(""\n"");
+    
+    return 0;
+}
+```
+
+**What will be the final registration order?**","Insertion at index 3 requires shifting elements from index 3 onwards to the right. Original: [401, 402, 403, 404, 405]. After shifting: [401, 402, 403, _, 404, 405]. After insertion: [401, 402, 403, 888, 404, 405].",1,published,medium,apply,blank,c-programming,blank,blank,blank,401 402 403 888 404 405,401 402 888 403 404 405,888 401 402 403 404 405,401 402 403 404 405 888,1
+Airline Seat Management,"**An airline reservation system removes cancelled bookings from the seat list:**
+
+```c
+#include <stdio.h>
+
+int main() {
+    int seat_bookings[10] = {601, 602, 603, 604, 605, 606, 607}; // 7 bookings initially
+    int booking_count = 7;
+    int cancel_position = 4; // Cancel booking at index 4 (seat 605)
+    
+    // Remove cancelled booking by shifting remaining bookings
+    for (int i = cancel_position; i < booking_count - 1; i++) {
+        seat_bookings[i] = seat_bookings[i + 1];
+    }
+    booking_count--;
+    
+    printf(""Remaining bookings: "");
+    for (int i = 0; i < booking_count; i++) {
+        printf(""%d "", seat_bookings[i]);
+    }
+    printf(""\n"");
+    
+    return 0;
+}
+```
+
+**What will be the final booking list?**","Deletion at index 4 (booking 605) requires shifting elements from index 5 onwards to the left. Original: [601, 602, 603, 604, 605, 606, 607]. After shifting left: [601, 602, 603, 604, 606, 607]. Booking 605 is removed.",1,published,medium,apply,blank,c-programming,blank,blank,blank,601 602 603 604 606 607,601 602 603 605 606 607,602 603 604 605 606 607,601 602 603 604 605 607,1
+Color Mixing Laboratory,"**A digital art application combines color values using matrix operations:**
+
+```c
+#include <stdio.h>
+
+int main() {
+    int red_channel[2][2] = {{100, 150}, {200, 120}};
+    int blue_channel[2][2] = {{80, 70}, {90, 110}};
+    int purple_mix[2][2];
+    
+    // Create purple by combining red and blue channels
+    for (int i = 0; i < 2; i++) {
+        for (int j = 0; j < 2; j++) {
+            purple_mix[i][j] = red_channel[i][j] + blue_channel[i][j];
+        }
+    }
+    
+    printf(""Purple color matrix:\n"");
+    for (int i = 0; i < 2; i++) {
+        for (int j = 0; j < 2; j++) {
+            printf(""%d "", purple_mix[i][j]);
+        }
+        printf(""\n"");
+    }
+    
+    return 0;
+}
+```
+
+**What will be the values in the second row of the purple_mix matrix?**","Matrix addition combines corresponding elements in the second row: purple_mix[1][0] = 200+90=290, purple_mix[1][1] = 120+110=230. The second row becomes [290, 230].",1,published,medium,apply,blank,c-programming,blank,blank,blank,290 230,200 120,90 110,280 240,1
+Product Catalog Search,"**An e-commerce platform searches for products by their catalog numbers:**
+
+```c
+#include <stdio.h>
+
+int main() {
+    int product_catalog[10] = {3001, 3012, 3005, 3018, 3007, 3025, 3003, 3030, 3015, 3009};
+    int target_product = 3025;
+    int search_result = -1;
+    
+    // Search through product catalog
+    for (int index = 0; index < 10; index++) {
+        if (product_catalog[index] == target_product) {
+            search_result = index;
+            break;
+        }
+    }
+    
+    if (search_result != -1) {
+        printf(""Product %d found at catalog position %d\n"", target_product, search_result);
+    } else {
+        printf(""Product %d not available in catalog\n"", target_product);
+    }
+    
+    return 0;
+}
+```
+
+**What will be the output when searching for product 3025?**","Linear search examines elements sequentially: index 0 (3001), index 1 (3012), index 2 (3005), index 3 (3018), index 4 (3007), index 5 (3025). Product 3025 is found at index 5 (arrays use 0-based indexing).",1,published,easy,apply,blank,c-programming,blank,blank,blank,Product 3025 found at catalog position 5,Product 3025 found at catalog position 6,Product 3025 not available in catalog,Product 3025 found at catalog position 4,1
+Medical Record System,"**A hospital manages patient data using coordinated arrays for different information types:**
+
+```c
+#include <stdio.h>
+
+int main() {
+    int patient_numbers[5] = {1001, 1002, 1003, 1004, 1005};
+    int ages[5] = {45, 32, 67, 28, 55};
+    char blood_types[5] = {'A', 'B', 'O', 'A', 'AB'};
+    
+    // Find patients with blood type 'A'
+    printf(""Patients with blood type A:\n"");
+    for (int i = 0; i < 5; i++) {
+        if (blood_types[i] == 'A') {
+            printf(""Patient %d, Age: %d\n"", patient_numbers[i], ages[i]);
+        }
+    }
+    
+    // Calculate average age
+    int total_age = 0;
+    for (int i = 0; i < 5; i++) {
+        total_age += ages[i];
+    }
+    printf(""Average patient age: %d\n"", total_age / 5);
+    
+    return 0;
+}
+```
+
+**How do coordinated arrays help manage complex patient information?**","Coordinated arrays store different types of related information (patient numbers, ages, blood types) using the same index positions. Patient at index i has their number, age, and blood type all accessible through the same index across different arrays, maintaining data relationships.",1,published,medium,understand,blank,c-programming,blank,blank,blank,They automatically sort patients by medical priority,They allow storing different data types while maintaining relationships through matching indices,They prevent unauthorized access to medical records,They reduce memory usage compared to single arrays,2
+Tournament Bracket System,"**A sports tournament organizes match results using a structured 2D array:**
+
+```c
+#include <stdio.h>
+
+int main() {
+    // Tournament data: [team1_id, team2_id, winner_id, score_difference]
+    int tournament_bracket[4][4] = {
+        {101, 102, 101, 15}, // Match 1: Team 101 beat 102 by 15 points
+        {103, 104, 104, 8},  // Match 2: Team 104 beat 103 by 8 points
+        {105, 106, 105, 22}, // Match 3: Team 105 beat 106 by 22 points
+        {107, 108, 108, 5}   // Match 4: Team 108 beat 107 by 5 points
+    };
+    
+    printf(""Tournament Results:\n"");
+    printf(""Match | Team1 | Team2 | Winner | Margin\n"");
+    for (int match = 0; match < 4; match++) {
+        printf(""%d | %d | %d | %d | %d\n"",
+            match + 1,
+            tournament_bracket[match][0],
+            tournament_bracket[match][1],
+            tournament_bracket[match][2],
+            tournament_bracket[match][3]);
+    }
+    
+    // Find the match with largest victory margin
+    int biggest_margin = tournament_bracket[0][3];
+    int dominant_match = 1;
+    for (int match = 1; match < 4; match++) {
+        if (tournament_bracket[match][3] > biggest_margin) {
+            biggest_margin = tournament_bracket[match][3];
+            dominant_match = match + 1;
+        }
+    }
+    
+    printf(""Most dominant victory: Match %d with %d point margin\n"",
+        dominant_match, biggest_margin);
+    
+    return 0;
+}
+```
+
+**How does this 2D array structure effectively organize tournament data?**","The 2D array organizes data with each row representing a complete match (4 matches total), and each column representing different match attributes (column 0: team1_id, column 1: team2_id, column 2: winner_id, column 3: score_difference). This structure allows easy access to all details for any specific match.",1,published,hard,analyze,blank,c-programming,blank,blank,blank,Each column represents a match with teams stored in different rows,Each row represents a complete match with all match details stored in columns,Matches and results are stored without any organized pattern,Each element stores multiple team statistics simultaneously,2

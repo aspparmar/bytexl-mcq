@@ -1,0 +1,474 @@
+# C Programming Assessment 10 - Dynamic Memory (CSV Format)
+
+Below is your CSV data. **Copy everything from the code block below** and save it as a `.csv` file:
+
+```csv
+title,description,explanation,score,status,difficulty,bloomTaxonomy,tags,subjects,topics,subTopics,companies,option1,option2,option3,option4,answer
+Recipe Ingredient List,"**A cooking app needs to store ingredient amounts, but the recipe size varies:**
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+    int ingredient_count = 4;
+    double *amounts;
+    
+    amounts = malloc(ingredient_count * sizeof(double));
+    if (amounts == NULL) {
+        printf(""Cannot store recipe ingredients\n"");
+        return 1;
+    }
+    
+    amounts[0] = 2.5;
+    amounts[1] = 1.0;
+    amounts[2] = 0.5;
+    amounts[3] = 0.25;
+    
+    printf(""Recipe ingredients:\n"");
+    for (int i = 0; i < ingredient_count; i++) {
+        printf(""Ingredient %d: %.2f cups\n"", i + 1, amounts[i]);
+    }
+    
+    free(amounts);
+    return 0;
+}
+```
+
+**What is the main advantage of using malloc() for this recipe program?**","malloc() is useful because we don't always know how many ingredients a recipe will have until the program is actually running. Instead of guessing and maybe wasting memory, malloc() lets us ask for exactly the right amount of memory when we need it.",1,published,easy,understand,blank,c-programming,blank,blank,blank,malloc() makes the program run faster than regular arrays,malloc() lets us get exactly the right amount of memory when the program runs,malloc() automatically saves the recipe to a file,malloc() prevents cooking mistakes,2
+Game High Scores,"**A game creates a leaderboard with all scores starting at zero:**
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+    int num_players = 5;
+    int *high_scores;
+    
+    high_scores = calloc(num_players, sizeof(int));
+    if (high_scores == NULL) {
+        printf(""Cannot create leaderboard\n"");
+        return 1;
+    }
+    
+    printf(""New leaderboard (all start at zero):\n"");
+    for (int i = 0; i < num_players; i++) {
+        printf(""Player %d: %d points\n"", i + 1, high_scores[i]);
+    }
+    
+    high_scores[0] = 1500;
+    high_scores[2] = 2200;
+    high_scores[4] = 1800;
+    
+    printf(""\nAfter some games:\n"");
+    for (int i = 0; i < num_players; i++) {
+        printf(""Player %d: %d points\n"", i + 1, high_scores[i]);
+    }
+    
+    free(high_scores);
+    return 0;
+}
+```
+
+**Why might you choose calloc() instead of malloc() for a game leaderboard?**","calloc() is perfect for leaderboards because it automatically fills all memory with zeros. This means every player starts with 0 points without us having to manually set each score. malloc() would leave random garbage values that we'd have to clean up ourselves.",1,published,easy,understand,blank,c-programming,blank,blank,blank,calloc() is always faster than malloc(),"calloc() automatically sets all scores to zero, which is perfect for a fresh leaderboard",calloc() works better with games,calloc() uses less memory than malloc(),2
+Playlist Manager,"**A music app needs to expand its playlist as users add more songs:**
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+    int playlist_size = 3;
+    int *song_ids = malloc(playlist_size * sizeof(int));
+    
+    if (song_ids == NULL) {
+        printf(""Cannot create playlist\n"");
+        return 1;
+    }
+    
+    song_ids[0] = 2001;
+    song_ids[1] = 2002;
+    song_ids[2] = 2003;
+    
+    printf(""Current playlist: "");
+    for (int i = 0; i < playlist_size; i++) {
+        printf(""Song_%d "", song_ids[i]);
+    }
+    printf(""\n"");
+    
+    int bigger_size = 6;
+    song_ids = realloc(song_ids, bigger_size * sizeof(int));
+    
+    if (song_ids == NULL) {
+        printf(""Cannot expand playlist\n"");
+        return 1;
+    }
+    
+    song_ids[3] = 2004;
+    song_ids[4] = 2005;
+    song_ids[5] = 2006;
+    
+    printf(""Expanded playlist: "");
+    for (int i = 0; i < bigger_size; i++) {
+        printf(""Song_%d "", song_ids[i]);
+    }
+    printf(""\n"");
+    
+    free(song_ids);
+    return 0;
+}
+```
+
+**What happens to the original songs when realloc() makes the playlist bigger?**","realloc() is smart - it keeps all your original data safe while making the memory bigger. It's like getting a bigger music folder and carefully moving all your old songs into it, then having space for new ones. Your original 3 songs stay exactly where they were.",1,published,medium,understand,blank,c-programming,blank,blank,blank,The original songs are deleted,The original songs are kept safe while new space is added,The original songs are moved to the end,Only new songs are stored,2
+Username Storage,"**A social media app stores usernames that can be different lengths:**
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int main() {
+    char new_username[] = ""CoolGamer2024"";
+    int username_length = strlen(new_username);
+    
+    char *stored_username = malloc(username_length + 1);
+    if (stored_username == NULL) {
+        printf(""Cannot store username\n"");
+        return 1;
+    }
+    
+    strcpy(stored_username, new_username);
+    
+    printf(""Username: %s\n"", stored_username);
+    printf(""Username length: %d characters\n"", username_length);
+    printf(""Memory used: %d bytes\n"", username_length + 1);
+    
+    free(stored_username);
+    return 0;
+}
+```
+
+**In the expression username_length + 1, what is the +1 for?**","In C, every string must end with a special invisible character '\0' that tells the computer ""this string is finished."" If your username is 13 characters long, you need 14 bytes of memory: 13 for the actual letters plus 1 for the '\0' marker at the end.",1,published,easy,understand,blank,c-programming,blank,blank,blank,To make the username longer,To reserve space for the special end-of-string marker '\0',To make the program work better,To prevent the username from being too short,2
+Puzzle Grid Creator,"**A puzzle game creates a square grid for players to solve:**
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+    int grid_size = 3;
+    
+    int **puzzle_grid = malloc(grid_size * sizeof(int*));
+    if (puzzle_grid == NULL) {
+        printf(""Cannot create puzzle grid\n"");
+        return 1;
+    }
+    
+    for (int row = 0; row < grid_size; row++) {
+        puzzle_grid[row] = malloc(grid_size * sizeof(int));
+        if (puzzle_grid[row] == NULL) {
+            printf(""Cannot create row %d\n"", row);
+            return 1;
+        }
+    }
+    
+    int number = 1;
+    for (int i = 0; i < grid_size; i++) {
+        for (int j = 0; j < grid_size; j++) {
+            puzzle_grid[i][j] = number++;
+        }
+    }
+    
+    printf(""Puzzle grid:\n"");
+    for (int i = 0; i < grid_size; i++) {
+        for (int j = 0; j < grid_size; j++) {
+            printf(""%d "", puzzle_grid[i][j]);
+        }
+        printf(""\n"");
+    }
+    
+    for (int i = 0; i < grid_size; i++) {
+        free(puzzle_grid[i]);
+    }
+    free(puzzle_grid);
+    
+    return 0;
+}
+```
+
+**To create a square grid with dynamic memory, what's the process?**","Creating a dynamic grid is like building a bookcase: first you build the frame that will hold the shelves (array of pointers), then you add each shelf one by one (each row). This two-step process gives you a flexible grid where each row could even be a different size if needed.",1,published,medium,understand,blank,c-programming,blank,blank,blank,Use one malloc() call for the entire grid,"First make an array of row pointers, then make each row separately",Use calloc() which creates grids automatically,"Create all rows first, then connect them",2
+Memory Waste Demonstration,"**A program shows what happens when you forget to clean up memory:**
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+
+void messy_function() {
+    int *data = malloc(8 * sizeof(int));
+    if (data == NULL) {
+        printf(""Cannot get memory\n"");
+        return;
+    }
+    
+    for (int i = 0; i < 8; i++) {
+        data[i] = i * 3;
+    }
+    
+    printf(""Messy function created: "");
+    for (int i = 0; i < 8; i++) {
+        printf(""%d "", data[i]);
+    }
+    printf(""\n"");
+}
+
+void clean_function() {
+    int *data = malloc(8 * sizeof(int));
+    if (data == NULL) {
+        printf(""Cannot get memory\n"");
+        return;
+    }
+    
+    for (int i = 0; i < 8; i++) {
+        data[i] = i * 4;
+    }
+    
+    printf(""Clean function created: "");
+    for (int i = 0; i < 8; i++) {
+        printf(""%d "", data[i]);
+    }
+    printf(""\n"");
+    
+    free(data);
+}
+
+int main() {
+    printf(""Running messy function:\n"");
+    messy_function();
+    
+    printf(""Running clean function:\n"");
+    clean_function();
+    
+    return 0;
+}
+```
+
+**What's wrong with the messy_function()?**","The messy function gets memory with malloc() but never gives it back with free(). This means the memory stays ""reserved"" for the program even though it's not being used anymore. If a program does this many times, it can waste all the computer's memory - this is called a ""memory leak.""",1,published,easy,understand,blank,c-programming,blank,blank,blank,It uses too much memory,"It doesn't call free(), so the memory stays reserved and wasted",It has too many variables,It prints too much information,2
+Careful Programming Example,"**A program shows the proper way to handle memory safely:**
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+    int data_size = 6;
+    float *measurements = malloc(data_size * sizeof(float));
+    
+    if (measurements == NULL) {
+        printf(""Error: Could not get memory for measurements\n"");
+        return 1;
+    }
+    
+    printf(""Memory allocation successful!\n"");
+    
+    for (int i = 0; i < data_size; i++) {
+        measurements[i] = i * 2.5;
+    }
+    
+    printf(""Measurements: "");
+    for (int i = 0; i < data_size; i++) {
+        printf(""%.1f "", measurements[i]);
+    }
+    printf(""\n"");
+    
+    free(measurements);
+    measurements = NULL;
+    
+    printf(""Memory properly freed and pointer cleared\n"");
+    
+    return 0;
+}
+```
+
+**What are the essential rules for safe memory management?**","Safe memory management follows 4 simple rules: 1) Check if malloc/calloc returned NULL (failed), 2) Stay within the memory boundaries you requested, 3) Call free() when you're finished, 4) Set the pointer to NULL so you can't accidentally use the freed memory. Following these rules prevents crashes and memory waste.",1,published,medium,understand,blank,c-programming,blank,blank,blank,Always use the maximum amount of memory available,"Check if allocation worked, use memory carefully, free it when done, clear the pointer","Only use malloc(), never calloc() or realloc()","Never check if malloc() worked - assume it always succeeds",2
+Smart List Growing,"**A shopping list program shows how to safely expand arrays:**
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+    int list_size = 3;
+    int *item_prices = malloc(list_size * sizeof(int));
+    
+    if (item_prices == NULL) {
+        printf(""Cannot create shopping list\n"");
+        return 1;
+    }
+    
+    item_prices[0] = 12;
+    item_prices[1] = 8;
+    item_prices[2] = 15;
+    
+    printf(""Initial shopping list: "");
+    for (int i = 0; i < list_size; i++) {
+        printf(""$%d "", item_prices[i]);
+    }
+    printf(""\n"");
+    
+    int new_size = 6;
+    int *expanded_list = realloc(item_prices, new_size * sizeof(int));
+    
+    if (expanded_list == NULL) {
+        printf(""Cannot expand list - keeping original\n"");
+        free(item_prices);
+        return 1;
+    }
+    
+    item_prices = expanded_list;
+    
+    item_prices[3] = 6;
+    item_prices[4] = 20;
+    item_prices[5] = 4;
+    
+    printf(""Complete shopping list: "");
+    for (int i = 0; i < new_size; i++) {
+        printf(""$%d "", item_prices[i]);
+    }
+    printf(""\n"");
+    
+    free(item_prices);
+    return 0;
+}
+```
+
+**Why do we use a separate variable (expanded_list) with realloc()?**","Using a separate variable is a safety trick. If realloc() fails, it returns NULL. If we put that NULL directly into our original pointer, we'd lose the address of our original memory and couldn't free it! The separate variable lets us check if realloc() worked before updating our main pointer.",1,published,medium,apply,blank,c-programming,blank,blank,blank,realloc() requires a separate variable to work,"If realloc() fails, we can still free the original memory",It makes the program faster,It's just a programming style choice,2
+Text Message Manager,"**A messaging app handles multiple text messages of different lengths:**
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int main() {
+    char msg1[] = ""Hello!"";
+    char msg2[] = ""How are you doing today?"";
+    char msg3[] = ""See you later!"";
+    
+    char *message1 = malloc(strlen(msg1) + 1);
+    char *message2 = malloc(strlen(msg2) + 1);
+    char *message3 = malloc(strlen(msg3) + 1);
+    
+    if (message1 == NULL || message2 == NULL || message3 == NULL) {
+        printf(""Cannot store all messages\n"");
+        free(message1);
+        free(message2);
+        free(message3);
+        return 1;
+    }
+    
+    strcpy(message1, msg1);
+    strcpy(message2, msg2);
+    strcpy(message3, msg3);
+    
+    printf(""Text conversation:\n"");
+    printf(""Message 1: %s\n"", message1);
+    printf(""Message 2: %s\n"", message2);
+    printf(""Message 3: %s\n"", message3);
+    
+    free(message1);
+    free(message2);
+    free(message3);
+    
+    printf(""All messages cleaned up\n"");
+    
+    return 0;
+}
+```
+
+**When you have several separate memory allocations, what's important to remember?**","Every single malloc() or calloc() call must have its own matching free() call. If you allocate 3 separate pieces of memory, you need 3 separate free() calls. Each allocation is independent - think of them as separate containers that each need to be returned individually.",1,published,easy,apply,blank,c-programming,blank,blank,blank,Free them all with one free() call,Each malloc() needs its own matching free() call,Only free the largest allocation,The order of freeing must match the order of allocation,2
+Complete Store Inventory,"**A store management program demonstrates all memory management concepts together:**
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int main() {
+    printf(""Store Inventory System\n"");
+    
+    int item_count = 4;
+    int *stock_levels = calloc(item_count, sizeof(int));
+    
+    if (stock_levels == NULL) {
+        printf(""Cannot create inventory system\n"");
+        return 1;
+    }
+    
+    char *item_a = malloc(strlen(""Laptops"") + 1);
+    char *item_b = malloc(strlen(""Phones"") + 1);
+    char *item_c = malloc(strlen(""Tablets"") + 1);
+    char *item_d = malloc(strlen(""Watches"") + 1);
+    
+    if (item_a == NULL || item_b == NULL || item_c == NULL || item_d == NULL) {
+        printf(""Cannot allocate item names\n"");
+        free(stock_levels);
+        free(item_a);
+        free(item_b);
+        free(item_c);
+        free(item_d);
+        return 1;
+    }
+    
+    strcpy(item_a, ""Laptops"");
+    strcpy(item_b, ""Phones"");
+    strcpy(item_c, ""Tablets"");
+    strcpy(item_d, ""Watches"");
+    
+    stock_levels[0] = 25;
+    stock_levels[1] = 40;
+    stock_levels[2] = 15;
+    stock_levels[3] = 30;
+    
+    printf(""\nCurrent store inventory:\n"");
+    printf(""%s: %d units\n"", item_a, stock_levels[0]);
+    printf(""%s: %d units\n"", item_b, stock_levels[1]);
+    printf(""%s: %d units\n"", item_c, stock_levels[2]);
+    printf(""%s: %d units\n"", item_d, stock_levels[3]);
+    
+    int new_count = 6;
+    int *new_stock = realloc(stock_levels, new_count * sizeof(int));
+    
+    if (new_stock == NULL) {
+        printf(""Cannot expand inventory\n"");
+    } else {
+        stock_levels = new_stock;
+        stock_levels[4] = 20;
+        stock_levels[5] = 10;
+        printf(""\nExpanded inventory includes:\n"");
+        printf(""Headphones: %d units\n"", stock_levels[4]);
+        printf(""Speakers: %d units\n"", stock_levels[5]);
+    }
+    
+    free(stock_levels);
+    free(item_a);
+    free(item_b);
+    free(item_c);
+    free(item_d);
+    
+    printf(""\nStore closed - all inventory memory cleaned up\n"");
+    
+    return 0;
+}
+```
+
+**What makes this a comprehensive example of memory management?**","This example shows complete memory management: uses calloc() for zero-initialized arrays, malloc() for strings, realloc() for expansion, checks every allocation for failure, handles errors by cleaning up partial allocations, uses all memory safely, and frees every single allocation at the end. This prevents crashes, memory leaks, and demonstrates all the key concepts together.",1,published,hard,analyze,blank,c-programming,blank,blank,blank,It only uses one type of memory allocation,"It demonstrates malloc, calloc, realloc, proper error checking, and complete cleanup",It never checks for allocation failures,It uses the maximum amount of memory possible,2
+```
+
+## Instructions to Save:
+1. **Copy all the text** from the code block above (starting with `title,description...`)
+2. **Open a new file** in VS Code (`Ctrl+N` or `Cmd+N`)
+3. **Paste** the content
+4. **Save as** `c_programming_dynamic_memory.csv` (`Ctrl+S` or `Cmd+S`)
+
+Your CSV with all 10 dynamic memory management questions is ready!

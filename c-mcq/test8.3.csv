@@ -1,0 +1,367 @@
+# C Programming Assessment 8 - String Questions (CSV Format)
+
+Below is your CSV data. **Copy everything from the code block below** and save it as a `.csv` file:
+
+```csv
+title,description,explanation,score,status,difficulty,bloomTaxonomy,tags,subjects,topics,subTopics,companies,option1,option2,option3,option4,answer
+Digital Library Card System,"**A library management system handles member registration with different string initialization approaches:**
+
+```c
+#include <stdio.h>
+#include <string.h>
+
+int main() {
+    char member_name[50] = ""Sarah Johnson"";
+    char member_id[20] = {'L', 'I', 'B', '2', '0', '2', '4', '\0'};
+    char membership_type[] = ""Premium"";
+    char library_branch[30];
+    strcpy(library_branch, ""Downtown"");
+    
+    printf(""Member: %s\n"", member_name);
+    printf(""ID: %s\n"", member_id);
+    printf(""Type: %s\n"", membership_type);
+    printf(""Branch: %s\n"", library_branch);
+    printf(""Member name length: %lu characters\n"", strlen(member_name));
+    
+    return 0;
+}
+```
+
+**What distinguishes a properly formed string from a regular character array in C?**","In C, a string is a character array that must end with a null terminator '\0'. This special character tells string functions where the string data ends. All four variables are proper strings: member_name and membership_type get automatic null termination, member_id has manual termination, and library_branch gets null termination through strcpy().",1,published,easy,understand,blank,c-programming,blank,blank,blank,Strings must be declared with a specific size,Strings require the null terminator '\0' to mark the end of character data,Strings can only contain alphabetic characters,Strings are automatically sorted alphabetically,2
+Food Delivery Order System,"**A restaurant delivery app securely collects customer order information:**
+
+```c
+#include <stdio.h>
+#include <string.h>
+
+int main() {
+    char customer_address[200];
+    char delivery_instructions[300];
+    
+    printf(""Enter delivery address: "");
+    if (fgets(customer_address, sizeof(customer_address), stdin) != NULL) {
+        size_t len = strlen(customer_address);
+        if (len > 0 && customer_address[len-1] == '\n') {
+            customer_address[len-1] = '\0';
+        }
+    }
+    
+    printf(""Enter delivery instructions: "");
+    if (fgets(delivery_instructions, sizeof(delivery_instructions), stdin) != NULL) {
+        size_t len = strlen(delivery_instructions);
+        if (len > 0 && delivery_instructions[len-1] == '\n') {
+            delivery_instructions[len-1] = '\0';
+        }
+    }
+    
+    printf(""Order details:\n"");
+    printf(""Address: %s\n"", customer_address);
+    printf(""Instructions: %s\n"", delivery_instructions);
+    
+    return 0;
+}
+```
+
+**Why does this code explicitly check for and remove newline characters?**","When users press Enter after typing input, fgets() captures this as a newline character '\n' at the end of the string. The code removes this character to ensure clean string output without unwanted line breaks when displaying the order details.",1,published,medium,understand,blank,c-programming,blank,blank,blank,fgets() requires newline removal to function correctly,fgets() reads the Enter key as '\n' which may interfere with string formatting,Newline characters cause buffer overflow,fgets() cannot handle newline characters automatically,2
+Software License Validator,"**A software activation system processes license keys using string manipulation functions:**
+
+```c
+#include <stdio.h>
+#include <string.h>
+
+int main() {
+    char license_key[] = ""SOFT-WARE-2024-PREMIUM"";
+    char company_code[10];
+    char validation_copy[50];
+    
+    strcpy(validation_copy, license_key);
+    
+    char *first_dash = strchr(license_key, '-');
+    if (first_dash != NULL) {
+        int code_length = first_dash - license_key;
+        strncpy(company_code, license_key, code_length);
+        company_code[code_length] = '\0';
+    }
+    
+    printf(""Full license: %s\n"", license_key);
+    printf(""Backup copy: %s\n"", validation_copy);
+    printf(""Company code: %s\n"", company_code);
+    
+    int is_premium = strstr(license_key, ""PREMIUM"") != NULL;
+    printf(""Premium license: %s\n"", is_premium ? ""Yes"" : ""No"");
+    
+    return 0;
+}
+```
+
+**What company code will be extracted from the license key?**","The code finds the first dash '-' in ""SOFT-WARE-2024-PREMIUM"", which is after ""SOFT"". It calculates the length from the start to this dash (4 characters) and uses strncpy() to extract ""SOFT"" as the company code, then adds null termination.",1,published,medium,apply,blank,c-programming,blank,blank,blank,SOFT-WARE,SOFT,WARE,2024,2
+Employee Database Manager,"**A human resources system organizes and compares employee records:**
+
+```c
+#include <stdio.h>
+#include <string.h>
+
+int main() {
+    char employee1[] = ""Williams, Jennifer"";
+    char employee2[] = ""Anderson, Michael"";
+    char employee3[] = ""Williams, Robert"";
+    char department_report[100] = ""Monthly Report - "";
+    char featured_employee[50];
+    
+    strcpy(featured_employee, employee2);
+    strcat(department_report, featured_employee);
+    
+    int name_comp1 = strcmp(employee1, employee2);
+    int name_comp2 = strcmp(employee1, employee3);
+    
+    printf(""Department report: %s\n"", department_report);
+    printf(""Featured employee name length: %lu\n"", strlen(featured_employee));
+    printf(""Williams,J vs Anderson,M: %d\n"", name_comp1);
+    printf(""Williams,J vs Williams,R: %d\n"", name_comp2);
+    
+    return 0;
+}
+```
+
+**What will be the comparison results for name_comp1 and name_comp2?**","strcmp() performs alphabetical comparison. ""Williams, Jennifer"" vs ""Anderson, Michael"": 'W' (ASCII 87) > 'A' (ASCII 65), so name_comp1 is positive. ""Williams, Jennifer"" vs ""Williams, Robert"": Both start with ""Williams, "" but 'J' (ASCII 74) < 'R' (ASCII 82), so name_comp2 is negative.",1,published,hard,analyze,blank,c-programming,blank,blank,blank,"name_comp1: positive, name_comp2: negative","name_comp1: negative, name_comp2: positive","name_comp1: positive, name_comp2: positive","name_comp1: negative, name_comp2: negative",1
+Social Media Hashtag Analytics,"**A social media analytics platform counts and extracts trending hashtags:**
+
+```c
+#include <stdio.h>
+#include <string.h>
+
+int main() {
+    char social_post[] = ""Amazing sunset today! #photography #nature #golden_hour #beautiful"";
+    char *hashtag_start;
+    int hashtag_count = 0;
+    
+    printf(""Analyzing post: %s\n"", social_post);
+    printf(""Found hashtags:\n"");
+    
+    hashtag_start = strchr(social_post, '#');
+    while (hashtag_start != NULL) {
+        hashtag_count++;
+        char *hashtag_end = strchr(hashtag_start, ' ');
+        if (hashtag_end != NULL) {
+            *hashtag_end = '\0';
+            printf(""#%d: %s\n"", hashtag_count, hashtag_start);
+            *hashtag_end = ' ';
+            hashtag_start = strchr(hashtag_end + 1, '#');
+        } else {
+            printf(""#%d: %s\n"", hashtag_count, hashtag_start);
+            hashtag_start = NULL;
+        }
+    }
+    
+    printf(""Total hashtags analyzed: %d\n"", hashtag_count);
+    
+    return 0;
+}
+```
+
+**How many hashtags will be identified in this social media post?**","The program searches for '#' characters and identifies four hashtags: ""#photography"", ""#nature"", ""#golden_hour"", and ""#beautiful"". Each hashtag is found by locating the '#' symbol and determining its boundary (next space or end of string).",1,published,easy,apply,blank,c-programming,blank,blank,blank,3,4,5,2,2
+Medical Record Parser,"**A healthcare system processes patient data from electronic health records:**
+
+```c
+#include <stdio.h>
+#include <string.h>
+
+int main() {
+    char patient_record[] = ""Smith,John,45,Diabetes,Dr.Johnson,2024-03-15"";
+    char record_backup[200];
+    char *data_field;
+    int field_count = 0;
+    
+    strcpy(record_backup, patient_record);
+    
+    printf(""Processing patient record: %s\n"", patient_record);
+    printf(""Extracted fields:\n"");
+    
+    data_field = strtok(record_backup, "","");
+    while (data_field != NULL) {
+        field_count++;
+        printf(""Field %d: %s\n"", field_count, data_field);
+        data_field = strtok(NULL, "","");
+    }
+    
+    printf(""Total data fields: %d\n"", field_count);
+    printf(""Original record preserved: %s\n"", patient_record);
+    
+    return 0;
+}
+```
+
+**Why must the original patient record be copied before using strtok()?**","strtok() is a destructive function that permanently alters the input string by replacing delimiter characters (commas) with null terminators '\0'. By working on a copy, the original patient record remains unchanged and can be used for other purposes or displayed intact.",1,published,medium,understand,blank,c-programming,blank,blank,blank,strtok() requires copied data to parse correctly,strtok() destructively modifies the string by replacing delimiters with null characters,Medical records require backup copies for legal compliance,strtok() processes copied strings more efficiently,2
+Gaming Username Filter,"**An online gaming platform validates usernames for inappropriate content:**
+
+```c
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+int main() {
+    char username[] = ""GameMaster2024!"";
+    int char_count = strlen(username);
+    int letters = 0, digits = 0, symbols = 0;
+    
+    printf(""Validating username: %s\n"", username);
+    
+    for (int i = 0; i < char_count; i++) {
+        if (isalpha(username[i])) {
+            letters++;
+        } else if (isdigit(username[i])) {
+            digits++;
+        } else {
+            symbols++;
+        }
+    }
+    
+    int min_length = char_count >= 8;
+    int symbol_limit = symbols <= 2;
+    int has_letters = letters > 0;
+    
+    printf(""Length: %d characters\n"", char_count);
+    printf(""Letters: %d, Digits: %d, Symbols: %d\n"", letters, digits, symbols);
+    printf(""Meets length requirement: %s\n"", min_length ? ""Yes"" : ""No"");
+    printf(""Within symbol limit: %s\n"", symbol_limit ? ""Yes"" : ""No"");
+    
+    int is_valid = min_length && symbol_limit && has_letters;
+    printf(""Username valid: %s\n"", is_valid ? ""Yes"" : ""No"");
+    
+    return 0;
+}
+```
+
+**Will the username ""GameMaster2024!"" pass validation?**","GameMaster2024! has 15 characters (≥8 ✓), contains 11 letters (G,a,m,e,M,a,s,t,e,r) (>0 ✓), 4 digits (2,0,2,4), and 1 symbol (!) (≤2 ✓). Since it meets all criteria (length, symbol limit, has letters), the username is valid.",1,published,easy,apply,blank,c-programming,blank,blank,blank,"No, too many symbols","Yes, meets all validation criteria","No, insufficient length","No, missing required letters",2
+Document Format Detector,"**A document management system identifies file types based on extensions:**
+
+```c
+#include <stdio.h>
+#include <string.h>
+
+int main() {
+    char document[] = ""annual_report.docx"";
+    char *file_extension;
+    char document_type[30];
+    int is_editable = 0;
+    
+    file_extension = strrchr(document, '.');
+    if (file_extension != NULL) {
+        file_extension++;
+        
+        if (strcmp(file_extension, ""docx"") == 0 || strcmp(file_extension, ""doc"") == 0) {
+            strcpy(document_type, ""Word Document"");
+            is_editable = 1;
+        } else if (strcmp(file_extension, ""pdf"") == 0) {
+            strcpy(document_type, ""PDF Document"");
+            is_editable = 0;
+        } else if (strcmp(file_extension, ""txt"") == 0) {
+            strcpy(document_type, ""Text File"");
+            is_editable = 1;
+        } else {
+            strcpy(document_type, ""Unknown Format"");
+            is_editable = 0;
+        }
+    } else {
+        strcpy(document_type, ""No Extension"");
+        is_editable = 0;
+    }
+    
+    printf(""Document: %s\n"", document);
+    printf(""Extension: %s\n"", file_extension ? file_extension : ""None"");
+    printf(""Type: %s\n"", document_type);
+    printf(""Editable: %s\n"", is_editable ? ""Yes"" : ""No"");
+    
+    return 0;
+}
+```
+
+**What will be the classification for ""annual_report.docx""?**","strrchr() finds the last '.' and returns a pointer to it. After incrementing past the dot, file_extension points to ""docx"". The strcmp() comparison matches ""docx"" with the first condition, setting document_type to ""Word Document"" and is_editable to 1 (Yes).",1,published,medium,apply,blank,c-programming,blank,blank,blank,"Extension: .docx, Type: PDF Document, Editable: No","Extension: docx, Type: Word Document, Editable: Yes","Extension: docx, Type: Unknown Format, Editable: No","Extension: None, Type: No Extension, Editable: No",2
+Customer Support Ticket Search,"**A help desk system searches through support tickets for specific issues:**
+
+```c
+#include <stdio.h>
+#include <string.h>
+
+int main() {
+    char support_tickets[][80] = {
+        ""Login issue - password reset required"",
+        ""Email server down - urgent priority"",
+        ""Software license expired - renewal needed"",
+        ""Login problem - account locked"",
+        ""Printer connectivity issue - driver update""
+    };
+    char search_keyword[] = ""login"";
+    int tickets_found = 0;
+    
+    printf(""Searching tickets for keyword: %s\n"", search_keyword);
+    printf(""Matching tickets:\n"");
+    
+    for (int i = 0; i < 5; i++) {
+        char ticket_lower[80];
+        strcpy(ticket_lower, support_tickets[i]);
+        
+        for (int j = 0; ticket_lower[j]; j++) {
+            if (ticket_lower[j] >= 'A' && ticket_lower[j] <= 'Z') {
+                ticket_lower[j] = ticket_lower[j] + 32;
+            }
+        }
+        
+        if (strstr(ticket_lower, search_keyword) != NULL) {
+            tickets_found++;
+            printf(""%d. %s\n"", tickets_found, support_tickets[i]);
+        }
+    }
+    
+    printf(""Total matching tickets: %d\n"", tickets_found);
+    
+    return 0;
+}
+```
+
+**How many support tickets contain the keyword ""login""?**","The search looks for ""login"" (lowercase) in each ticket after converting to lowercase. It finds matches in ""Login issue - password reset required"" (Login → login) and ""Login problem - account locked"" (Login → login), so tickets_found will be 2.",1,published,easy,apply,blank,c-programming,blank,blank,blank,1,2,3,0,2
+Secure Message Encoder,"**A private messaging application implements text encoding for message privacy:**
+
+```c
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+int main() {
+    char private_message[] = ""Secret meeting at dawn"";
+    char encoded_text[50];
+    int shift_value = 7;
+    
+    strcpy(encoded_text, private_message);
+    
+    printf(""Original: %s\n"", private_message);
+    
+    for (int i = 0; i < strlen(encoded_text); i++) {
+        if (isalpha(encoded_text[i])) {
+            if (isupper(encoded_text[i])) {
+                encoded_text[i] = ((encoded_text[i] - 'A' + shift_value) % 26) + 'A';
+            } else {
+                encoded_text[i] = ((encoded_text[i] - 'a' + shift_value) % 26) + 'a';
+            }
+        }
+    }
+    
+    printf(""Encoded: %s\n"", encoded_text);
+    
+    int has_meeting = strstr(private_message, ""meeting"") != NULL;
+    printf(""Original contains 'meeting': %s\n"", has_meeting ? ""Yes"" : ""No"");
+    
+    return 0;
+}
+```
+
+**What will be the encoded message using ROT7 cipher?**","ROT7 cipher shifts each letter 7 positions: S→Z, e→l, c→j, r→y, e→l, t→a, (space), m→t, e→l, e→l, t→a, i→p, n→u, g→n, (space), a→h, t→a, (space), d→k, a→h, w→d, n→u. The encoded message becomes ""Zljyla tllApun ha khdu"". The original does contain ""meeting"", so that check returns ""Yes"".",1,published,hard,apply,blank,c-programming,blank,blank,blank,Zljyla tllPiha hA kahg,Zljyla tllApun ha khdu,Secret meeting at dawn,Zljyla tllapur ha khdu,2
+```
+
+## Instructions to Save:
+1. **Copy all the text** from the code block above (starting with `title,description...`)
+2. **Open a new file** in VS Code (`Ctrl+N` or `Cmd+N`)
+3. **Paste** the content
+4. **Save as** `c_programming_strings.csv` (`Ctrl+S` or `Cmd+S`)
+
+Your CSV with all 10 string-related questions is ready!

@@ -1,0 +1,289 @@
+# C Programming Assessment 11 - Structs, Unions, Enums (CSV Format)
+
+Below is your CSV data. **Copy everything from the code block below** and save it as a `.csv` file:
+
+```csv
+title,description,explanation,score,status,difficulty,bloomTaxonomy,tags,subjects,topics,subTopics,companies,option1,option2,option3,option4,answer
+Weather Station Monitor,"**A weather monitoring system tracks atmospheric conditions:**
+
+```c
+#include <stdio.h>
+
+struct WeatherData {
+    float temperature;
+    int humidity;
+    float wind_speed;
+    char conditions[20];
+};
+
+int main() {
+    struct WeatherData today = {23.5, 65, 12.3, ""Partly Cloudy""};
+    printf(""Temperature: %.1f°C, Wind: %.1f km/h\n"",
+           today.temperature, today.wind_speed);
+    return 0;
+}
+```
+
+**What is the primary advantage of grouping weather measurements in a structure?**","Structures organize related weather measurements (temperature, humidity, wind_speed, conditions) into a single logical unit, making the data easier to manage and understand.",1,published,easy,understand,blank,c-programming,blank,blank,blank,Weather data is automatically validated for accuracy,All related measurements are organized under one data type,Memory usage is reduced compared to individual variables,Weather calculations are performed automatically,2
+Recipe Ingredient List,"**A cooking app manages recipe ingredients with nutritional information:**
+
+```c
+#include <stdio.h>
+
+struct Nutrition {
+    int calories;
+    float protein;
+};
+
+struct Ingredient {
+    char name[15];
+    float quantity;
+    struct Nutrition facts;
+};
+
+int main() {
+    struct Ingredient item = {""Chicken"", 200.0, {250, 31.5}};
+    printf(""Ingredient: %s has %.1fg protein\n"",
+           item.name, item.facts.protein);
+    return 0;
+}
+```
+
+**What will be the output?**","The code accesses the protein field from the nested Nutrition structure using item.facts.protein, which contains the value 31.5.",1,published,easy,apply,blank,c-programming,blank,blank,blank,Ingredient: Chicken has 250.0g protein,Ingredient: Chicken has 31.5g protein,Ingredient: 200.0 has 31.5g protein,Compilation error in nested structure access,2
+Movie Theater Showtime,"**A movie theater system manages screening schedules:**
+
+```c
+#include <stdio.h>
+
+struct Movie {
+    char title[25];
+    int duration;
+    float rating;
+};
+
+int main() {
+    struct Movie schedule[3] = {
+        {""Action Hero"", 120, 8.5},
+        {""Comedy Night"", 95, 7.2},
+        {""Drama Story"", 135, 9.1}
+    };
+    
+    int longest = 0;
+    for(int i = 1; i < 3; i++) {
+        if(schedule[i].duration > schedule[longest].duration)
+            longest = i;
+    }
+    
+    printf(""Longest movie: %s (%d min)\n"",
+           schedule[longest].title, schedule[longest].duration);
+    return 0;
+}
+```
+
+**What will be printed?**","The loop compares durations: Drama Story (135) > Action Hero (120) and Drama Story (135) > Comedy Night (95), so Drama Story is the longest.",1,published,medium,apply,blank,c-programming,blank,blank,blank,Longest movie: Action Hero (120 min),Longest movie: Comedy Night (95 min),Longest movie: Drama Story (135 min),Longest movie: Action Hero (135 min),3
+Fitness Activity Tracker,"**A fitness app tracks workout activities:**
+
+```c
+#include <stdio.h>
+
+struct Activity {
+    char name[15];
+    int calories_burned;
+};
+
+void log_activity(struct Activity act) {
+    act.calories_burned += 50;
+    printf(""Logged: %s burned %d calories\n"", act.name, act.calories_burned);
+}
+
+void update_activity(struct Activity *act) {
+    act->calories_burned += 50;
+}
+
+int main() {
+    struct Activity workout = {""Running"", 300};
+    log_activity(workout);
+    update_activity(&workout);
+    printf(""Final calories: %d\n"", workout.calories_burned);
+    return 0;
+}
+```
+
+**What will be the final calories value?**","log_activity() receives a copy, so the +50 doesn't affect the original (still 300). update_activity() receives a pointer and adds 50, making the final value 350.",1,published,medium,analyze,blank,c-programming,blank,blank,blank,Final calories: 300,Final calories: 350,Final calories: 400,Final calories: 250,2
+Digital Display Controller,"**A digital display controller manages different value types:**
+
+```c
+#include <stdio.h>
+
+union DisplayValue {
+    int number;
+    char letter;
+    float decimal;
+};
+
+int main() {
+    union DisplayValue screen;
+    screen.number = 42;
+    printf(""Display: %d\n"", screen.number);
+    
+    screen.letter = 'X';
+    printf(""Number: %d, Letter: %c\n"", screen.number, screen.letter);
+    
+    return 0;
+}
+```
+
+**Why does the number value change after setting the letter?**","Union members share the same memory location. When letter 'X' is stored, it overwrites the memory that previously held the number 42.",1,published,medium,understand,blank,c-programming,blank,blank,blank,Letter automatically converts to number format,Union members occupy the same memory space,Display controller prevents data conflicts,Number and letter are synchronized values,2
+Pizza Order Status,"**A pizza delivery system tracks order status:**
+
+```c
+#include <stdio.h>
+
+enum OrderState {
+    RECEIVED = 100,
+    PREPARING = 200,
+    BAKING = 300,
+    READY = 400,
+    DELIVERED = 500
+};
+
+int main() {
+    enum OrderState pizza_order = BAKING;
+    printf(""Current status code: %d\n"", pizza_order);
+    
+    if(pizza_order >= BAKING) {
+        printf(""Pizza is in the oven or beyond\n"");
+    }
+    
+    return 0;
+}
+```
+
+**What will be the complete output?**","BAKING has value 300. The comparison 300 >= 300 is true, so both messages print.",1,published,easy,apply,blank,c-programming,blank,blank,blank,"Current status code: 300, Pizza is in the oven or beyond","Current status code: BAKING, Pizza is in the oven or beyond","Current status code: 3, Pizza is in the oven or beyond",Compilation error when comparing enum values,1
+Smart Appliance Controller,"**A smart home system controls different appliance types:**
+
+```c
+#include <stdio.h>
+#include <string.h>
+
+union ApplianceData {
+    struct { int temperature; int timer; } oven_settings;
+    struct { int speed; int program; } washer_settings;
+    struct { int channel; int volume; } tv_settings;
+};
+
+struct SmartDevice {
+    int device_id;
+    char type[10];
+    union ApplianceData config;
+};
+
+int main() {
+    struct SmartDevice kitchen;
+    kitchen.device_id = 101;
+    strcpy(kitchen.type, ""Oven"");
+    kitchen.config.oven_settings.temperature = 180;
+    kitchen.config.oven_settings.timer = 45;
+    
+    printf(""Device %d: %d°C for %d minutes\n"",
+           kitchen.device_id, kitchen.config.oven_settings.temperature,
+           kitchen.config.oven_settings.timer);
+    return 0;
+}
+```
+
+**What is the benefit of using a union for appliance settings?**","The union saves memory because each device needs only its specific settings (oven OR washer OR TV), not all possible settings for every device type.",1,published,medium,analyze,blank,c-programming,blank,blank,blank,All appliance types can be controlled simultaneously,Memory is conserved by storing only relevant device settings,Settings are automatically synchronized across devices,Device malfunctions are automatically prevented,2
+Vending Machine Selector,"**A vending machine uses enums for item selection:**
+
+```c
+#include <stdio.h>
+
+enum Item { SODA, CHIPS, CANDY, WATER };
+
+int main() {
+    enum Item selection = CHIPS;
+    
+    switch(selection) {
+        case SODA: printf(""Dispensing beverage\n""); break;
+        case CHIPS: printf(""Dispensing snack\n""); break;
+        case CANDY: printf(""Dispensing sweet\n""); break;
+        case WATER: printf(""Dispensing drink\n""); break;
+        default: printf(""Invalid selection\n"");
+    }
+    
+    return 0;
+}
+```
+
+**What will be printed?**","selection is set to CHIPS (value 1), so the switch executes the CHIPS case, printing ""Dispensing snack"".",1,published,easy,apply,blank,c-programming,blank,blank,blank,Dispensing beverage,Dispensing snack,Dispensing sweet,Invalid selection,2
+Pet Adoption Center,"**A pet adoption center manages animal information:**
+
+```c
+#include <stdio.h>
+
+enum Species { CAT = 1, DOG = 2, BIRD = 3, RABBIT = 4 };
+
+struct Pet {
+    int pet_id;
+    char name[15];
+    enum Species type;
+    int age_months;
+};
+
+int main() {
+    struct Pet shelter[2] = {
+        {201, ""Fluffy"", CAT, 24},
+        {202, ""Buddy"", DOG, 36}
+    };
+    
+    printf(""Pet %s is a %s\n"", shelter[0].name,
+           (shelter[0].type == CAT) ? ""cat"" : ""other animal"");
+    return 0;
+}
+```
+
+**How do enums enhance this pet management system?**","Using CAT, DOG, BIRD, RABBIT instead of numbers (1, 2, 3, 4) makes the code more readable and self-documenting when identifying pet species.",1,published,easy,understand,blank,c-programming,blank,blank,blank,Enums automatically track pet adoption status,Pet species are more readable than numeric codes,Enums prevent pets from being assigned wrong ages,Species information is automatically validated,2
+Music Streaming Platform,"**A music streaming platform manages audio tracks with different formats:**
+
+```c
+#include <stdio.h>
+#include <string.h>
+
+enum AudioFormat { MP3 = 128, FLAC = 1411, AAC = 256, OGG = 320 };
+
+union TrackData {
+    struct { int bitrate; float duration; char codec[8]; } compressed;
+    struct { int sample_rate; int channels; float size_mb; } lossless;
+    struct { char artist[20]; char album[25]; int year; } metadata;
+};
+
+struct AudioTrack {
+    enum AudioFormat format;
+    union TrackData info;
+    char title[30];
+};
+
+int main() {
+    struct AudioTrack song;
+    song.format = FLAC;
+    strcpy(song.title, ""Symphony No. 5"");
+    song.info.lossless.sample_rate = 44100;
+    song.info.lossless.channels = 2;
+    song.info.lossless.size_mb = 45.2;
+    
+    printf(""Format bitrate: %d, Channels: %d\n"",
+           song.format, song.info.lossless.channels);
+    return 0;
+}
+```
+
+**What design approach does this music platform demonstrate?**","Enums provide meaningful audio format constants with bitrate values (FLAC=1411), while unions efficiently store format-specific information without wasting memory on unused format fields.",1,published,hard,analyze,blank,c-programming,blank,blank,blank,Using enums for audio quality levels and unions for format-specific data,Using unions to play multiple audio formats simultaneously,Using structures to automatically convert between audio formats,Using enums to compress audio file sizes,1
+```
+
+## Instructions to Save:
+1. **Copy all the text** from the code block above (starting with `title,description...`)
+2. **Open a new file** in VS Code (`Ctrl+N` or `Cmd+N`)
+3. **Paste** the content
+4. **Save as** `c_programming_structs_unions_enums.csv` (`Ctrl+S` or `Cmd+S`)
+
+Your CSV with all 10 structs, unions, and enums questions is ready!
