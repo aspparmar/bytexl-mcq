@@ -1,0 +1,86 @@
+# Stack - DSA Assessment 
+
+
+```csv
+title,description,explanation,score,status,difficulty,bloomTaxonomy,tags,subjects,topics,subTopics,companies,option1,option2,option3,option4,answer
+Browser Back Button,"**A web browser implements the back button functionality using a stack. When you visit: Home → Products → Cart → Checkout, then press back twice, which page are you on?**","Stack follows LIFO (Last In First Out). Pages visited: Home, Products, Cart, Checkout (top). Back once removes Checkout (now at Cart). Back twice removes Cart (now at Products).",1,published,easy,apply,blank,dsa,blank,blank,blank,Home,Products,Cart,Checkout,2
+Text Editor Undo Feature,"**A code editor tracks operations: Type 'Hello', Delete 'o', Type 'p', Undo. What does the undo operation do?**","Undo uses a stack where each operation is pushed. The most recent operation 'Type p' is at the top. Undo pops and reverses it, removing 'p' from the text.",1,published,easy,understand,blank,dsa,blank,blank,blank,Restores the deleted 'o',Removes the typed 'p',Deletes 'Hello',Does nothing,2
+Function Call Stack,"**In a recursive function calculating factorial(5), how many activation records are pushed onto the call stack before starting to pop?**","Recursive calls: factorial(5) → factorial(4) → factorial(3) → factorial(2) → factorial(1) → factorial(0). That's 6 function calls pushed before base case starts returning.",1,published,medium,apply,blank,dsa,blank,blank,blank,4,5,6,7,3
+Expression Evaluation System,"**A calculator app evaluates the postfix expression: 5 3 + 8 2 - *. What is the result?**
+
+```python
+def evaluate_postfix(expression):
+    stack = []
+    for token in expression.split():
+        if token.isdigit():
+            stack.append(int(token))
+        else:
+            b = stack.pop()
+            a = stack.pop()
+            if token == '+': stack.append(a + b)
+            elif token == '-': stack.append(a - b)
+            elif token == '*': stack.append(a * b)
+    return stack.pop()
+```","Step by step: Push 5, Push 3, Pop 3 and 5, Push (5+3=8). Push 8, Push 2, Pop 2 and 8, Push (8-2=6). Pop 6 and 8, Push (8*6=48).",1,published,medium,apply,blank,dsa,blank,blank,blank,11,48,16,30,2
+Balanced Parentheses Validator,"**A code compiler checks if brackets are balanced in: {[()]}[]{()}. Is this valid?**","Using a stack: Push opening brackets, pop when closing brackets match. {[( all pushed, ) matches (, ] matches [, } matches {. Then []{ pushed and matched. Finally () matched. All balanced.",1,published,easy,apply,blank,dsa,blank,blank,blank,"Yes, all brackets are balanced","No, missing closing bracket","No, incorrect nesting order","No, extra opening bracket",1
+Stock Price Analysis,"**A stock trading app needs to find the next greater price for each day. For prices [73, 74, 75, 71, 69, 72, 76, 73], what's the next greater price after 74?**","The next greater element problem uses a stack. After 74, we check: 75 is immediately next and is greater than 74. So answer is 75.",1,published,medium,apply,blank,dsa,blank,blank,blank,73,75,76,No greater price exists,2
+Memory Management,"**An operating system allocates memory blocks in sequence: 100MB, 200MB, 300MB, 150MB. When deallocating, which block is freed first using stack-based memory management?**","Stack-based memory management follows LIFO. The last allocated block (150MB) is at the top and will be freed first.",1,published,easy,understand,blank,dsa,blank,blank,blank,100MB,200MB,300MB,150MB,4
+HTML Tag Validator,"**A web scraper validates HTML: <div><p><span></span></p></div>. Using a stack-based approach, is this valid?**","Stack approach: Push <div>, <p>, <span>. Then </span> matches and pops <span>, </p> matches and pops <p>, </div> matches and pops <div>. Stack empty = valid.",1,published,easy,apply,blank,dsa,blank,blank,blank,"Yes, properly nested","No, missing closing tag","No, tags out of order","Cannot determine",1
+Infix to Postfix Converter,"**A calculator converts infix A + B * C to postfix. What is the correct postfix expression?**","Using operator precedence: * has higher precedence than +. B * C is evaluated first. Result: A B C * +. Stack helps maintain operator precedence during conversion.",1,published,medium,understand,blank,dsa,blank,blank,blank,A B + C *,A B C * +,A B C + *,A + B C *,2
+Maze Backtracking,"**A robot navigates a maze using stack-based backtracking. Path taken: Start→A→B→C (dead end)→B→D→Exit. How many times does the robot backtrack?**","Backtracking happens when hitting dead ends. From C (dead end) back to B (1 backtrack), then continues to D and Exit. Total: 1 backtrack.",1,published,medium,apply,blank,dsa,blank,blank,blank,0,1,2,3,2
+Stack Implementation Efficiency,"**An e-commerce platform implements a stack using an array with max size 1000. What is the time complexity of push and pop operations?**","Array-based stack: Push adds element at top index (O(1)), Pop removes element at top index (O(1)). Both are constant time as no shifting is needed.",1,published,easy,understand,blank,dsa,blank,blank,blank,"Push: O(1), Pop: O(1)","Push: O(n), Pop: O(1)","Push: O(1), Pop: O(n)","Push: O(n), Pop: O(n)",1
+Min Stack Design,"**A stock trading app needs to track minimum price at any point. When prices are pushed in order: 50, 40, 60, 30, 70, what's the minimum after all pushes?**
+
+```python
+class MinStack:
+    def __init__(self):
+        self.stack = []
+        self.min_stack = []
+    
+    def push(self, val):
+        self.stack.append(val)
+        if not self.min_stack or val <= self.min_stack[-1]:
+            self.min_stack.append(val)
+    
+    def get_min(self):
+        return self.min_stack[-1]
+```","Min stack tracks minimums: Push 50 (min=50), Push 40 (min=40), Push 60 (min=40), Push 30 (min=30), Push 70 (min=30). Final minimum is 30.",1,published,hard,apply,blank,dsa,blank,blank,blank,30,40,50,70,1
+Tower of Hanoi Moves,"**A puzzle game implements Tower of Hanoi with 4 disks. What is the minimum number of moves required to solve it?**","Tower of Hanoi follows the formula 2^n - 1, where n is number of disks. For 4 disks: 2^4 - 1 = 16 - 1 = 15 moves.",1,published,medium,apply,blank,dsa,blank,blank,blank,7,15,31,8,2
+Stack Overflow Detection,"**A server application has a call stack limit of 1000 frames. A recursive function with no base case is called. What happens?**","Without a base case, recursion continues infinitely, pushing frames onto the stack. When the 1000 frame limit is exceeded, a stack overflow error occurs.",1,published,easy,understand,blank,dsa,blank,blank,blank,Program runs infinitely without error,Stack overflow error after 1000 recursive calls,System automatically increases stack size,Program optimizes recursion to iteration,2
+Daily Temperature Problem,"**A weather app finds how many days until a warmer temperature. Given temperatures [73, 74, 75, 71, 69, 72, 76, 73], how many days after day 0 (73°) until warmer?**
+
+```python
+def daily_temperatures(temps):
+    result = [0] * len(temps)
+    stack = []  # stores indices
+    
+    for i, temp in enumerate(temps):
+        while stack and temps[stack[-1]] < temp:
+            prev_index = stack.pop()
+            result[prev_index] = i - prev_index
+        stack.append(i)
+    return result
+```","Day 0 has temp 73. Day 1 has temp 74, which is warmer. Days until warmer = 1 day.",1,published,medium,apply,blank,dsa,blank,blank,blank,0 days,1 day,2 days,3 days,2
+Browser Forward Button Implementation,"**After implementing browser history with two stacks (back_stack and forward_stack), user visits: A→B→C, presses back twice, then visits D. What happens to forward_stack?**","When a new page D is visited after going back, the forward history becomes invalid and must be cleared. Forward_stack is emptied because the user took a new path.",1,published,medium,analyze,blank,dsa,blank,blank,blank,Forward_stack contains C,Forward_stack contains B and C,Forward_stack is cleared/emptied,Forward_stack contains D,3
+Asteroid Collision Simulation,"**In a space game, asteroids move right (positive) or left (negative) with given sizes: [5, 10, -5]. When they collide, smaller ones explode. What remains?**","Stack simulation: Push 5, Push 10. -5 comes left, collides with 10. Size 5 < size 10, so -5 explodes. Result: [5, 10].",1,published,hard,apply,blank,dsa,blank,blank,blank,[5],[5, 10],[-5],[10],2
+Expression Validator,"**A JSON API validator checks nested objects using a stack. For input: {""user"":{""name"":""John"",""age"":30}}, after processing, what indicates valid JSON?**","Stack-based validation pushes opening braces and pops on closing braces. Valid JSON results in an empty stack after processing all characters, indicating all braces are matched.",1,published,medium,understand,blank,dsa,blank,blank,blank,Stack contains all opening braces,Stack is empty,Stack contains one element,Stack size equals number of keys,2
+Stack Using Queues,"**A messaging app implements a stack using two queues for message history. What is the time complexity of the pop operation?**
+
+```python
+class StackUsingQueues:
+    def __init__(self):
+        self.q1 = []
+        self.q2 = []
+    
+    def pop(self):
+        # Move all except last from q1 to q2
+        while len(self.q1) > 1:
+            self.q2.append(self.q1.pop(0))
+        result = self.q1.pop(0)
+        # Swap queues
+        self.q1, self.q2 = self.q2, self.q1
+        return result
+```","Pop operation requires moving n-1 elements from q1 to q2 to access the last element (stack top). This takes O(n) time.",1,published,hard,analyze,blank,dsa,blank,blank,blank,O(1),O(log n),O(n),O(n²),3
+Largest Rectangle in Histogram,"**A data visualization tool needs to find the largest rectangular area in a histogram with heights [2, 1, 5, 6, 2, 3]. What is the maximum area?**","Using a stack to track increasing heights: The largest rectangle is formed by heights 5 and 6 (width 2) giving area = 5 * 2 = 10.",1,published,hard,apply,blank,dsa,blank,blank,blank,8,10,12,6,2
+Stack Memory vs Heap Memory,"**In a video game, which data structure is most suitable for managing temporary power-ups that expire in reverse order of acquisition?**","Stack is perfect for LIFO behavior. Power-ups acquired last expire first (like health boost acquired after speed boost expires before speed boost).",1,published,easy,understand,blank,dsa,blank,blank,blank,Array,Queue,Stack,Hash Table,3
+```
