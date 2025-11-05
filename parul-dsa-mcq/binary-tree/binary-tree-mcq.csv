@@ -1,0 +1,278 @@
+# Binary Tree - DSA Assessment (CSV Format)
+
+Below is your CSV data with 20 industry-oriented MCQs. **Copy everything from the code block below** and save it as a `.csv` file:
+
+```csv
+title,description,explanation,score,status,difficulty,bloomTaxonomy,tags,subjects,topics,subTopics,companies,option1,option2,option3,option4,answer
+E-Commerce Category Tree,"**An e-commerce platform organizes product categories using a binary tree structure:**
+
+```
+Electronics
+├── Computers
+│   ├── Laptops
+│   └── Desktops
+└── Mobile
+    ├── Phones
+    └── Tablets
+```
+
+**Each category node stores its name and links to at most two subcategories. What is the maximum number of categories that can be stored at level 3 (root is level 0)?**","In a binary tree, the maximum number of nodes at level k is 2^k. At level 3, the maximum is 2^3 = 8 nodes.",1,published,easy,understand,blank,c-programming,blank,blank,blank,3,4,8,16,3
+File System Directory Navigator,"**A file system uses a binary tree where each directory node has at most two subdirectories:**
+
+```c
+struct Directory {
+    char name[50];
+    struct Directory *left_subdir;
+    struct Directory *right_subdir;
+};
+```
+
+**What property distinguishes a binary tree from other tree structures?**","A binary tree is defined by the constraint that each node can have at most two children (left and right), unlike general trees where nodes can have any number of children.",1,published,easy,understand,blank,c-programming,blank,blank,blank,Each node must have exactly two children,Each node stores binary data only,Each node has at most two children,The tree has exactly two levels,3
+Tournament Bracket System,"**A sports tournament uses a binary tree where each match winner advances:**
+
+```
+         Final
+        /      \
+    Semi1      Semi2
+    /  \       /  \
+  Q1   Q2    Q3   Q4
+```
+
+**If there are 16 teams in the tournament, what is the height of the tournament tree?**","With 16 teams (leaf nodes), the height is log2(16) = 4. Height is the number of edges from root to deepest leaf.",1,published,medium,apply,blank,c-programming,blank,blank,blank,3,4,5,16,2
+Company Organizational Chart,"**A startup's organizational structure is represented as a binary tree:**
+
+```c
+struct Employee {
+    int emp_id;
+    char name[50];
+    struct Employee *left_report;
+    struct Employee *right_report;
+};
+
+struct Employee* createEmployee(int id, char* name) {
+    struct Employee* newEmp = malloc(sizeof(struct Employee));
+    newEmp->emp_id = id;
+    strcpy(newEmp->name, name);
+    newEmp->left_report = NULL;
+    newEmp->right_report = NULL;
+    return newEmp;
+}
+```
+
+**What is the significance of setting both pointers to NULL during node creation?**","Setting pointers to NULL indicates the employee currently has no direct reports (leaf node). This prevents accessing garbage memory addresses and allows checking if a node is a leaf.",1,published,easy,understand,blank,c-programming,blank,blank,blank,It prevents memory leaks,It indicates the node is a leaf with no children,It makes the tree balanced,It improves insertion speed,2
+Decision Tree Chatbot,"**A customer service chatbot uses a binary tree for decision flow:**
+
+```c
+void processQuery(TreeNode* node) {
+    if (node->left == NULL && node->right == NULL) {
+        printf(""Solution: %s\n"", node->solution);
+        return;
+    }
+    // Continue traversing based on user response
+}
+```
+
+**What does the condition check identify?**","The condition (node->left == NULL && node->right == NULL) checks if both children are absent, identifying a leaf node which contains the final solution/answer.",1,published,easy,apply,blank,c-programming,blank,blank,blank,Root node,Leaf node,Internal node,Parent node,2
+Social Media Comment Thread,"**A social media platform displays comment threads in preorder traversal:**
+
+```c
+void displayComments(Comment* root) {
+    if (root == NULL) return;
+    printf(""Comment by %s: %s\n"", root->author, root->text);
+    displayComments(root->left);
+    displayComments(root->right);
+}
+```
+
+**Given a tree: Root(A) -> Left(B) -> Right(C), where B has children D(left) and E(right), what is the display order?**","Preorder traversal visits nodes in order: Root -> Left subtree -> Right subtree. Order: A, B, D, E, C.",1,published,medium,apply,blank,c-programming,blank,blank,blank,"A, B, C, D, E","A, B, D, E, C","D, B, E, A, C","A, C, B, E, D",2
+Music Playlist Analyzer,"**A music app analyzes song preferences using inorder traversal:**
+
+```c
+void analyzeSongs(SongNode* root) {
+    if (root == NULL) return;
+    analyzeSongs(root->left);
+    printf(""Song: %s - Plays: %d\n"", root->title, root->play_count);
+    analyzeSongs(root->right);
+}
+```
+
+**For a BST storing songs sorted by play count, what advantage does inorder traversal provide?**","Inorder traversal of a Binary Search Tree visits nodes in sorted order (ascending). This efficiently displays songs from least to most played without additional sorting.",1,published,medium,understand,blank,c-programming,blank,blank,blank,It finds the most played song fastest,It displays songs in sorted order,It uses less memory than other traversals,It processes songs in insertion order,2
+Network Server Hierarchy,"**A CDN network uses postorder traversal to shut down servers:**
+
+```c
+void shutdownServers(Server* root) {
+    if (root == NULL) return;
+    shutdownServers(root->left);
+    shutdownServers(root->right);
+    printf(""Shutting down server: %s\n"", root->name);
+    freeServer(root);
+}
+```
+
+**Why is postorder traversal appropriate for this deletion operation?**","Postorder (Left -> Right -> Root) ensures child nodes are processed before their parent. This is crucial for deletion to avoid accessing freed memory and properly deallocate the entire tree.",1,published,hard,analyze,blank,c-programming,blank,blank,blank,It's the fastest traversal method,Children must be freed before their parent to avoid memory errors,It processes servers in alphabetical order,It minimizes network downtime,2
+Hospital Patient Triage System,"**An emergency room uses level-order traversal to process patients:**
+
+```c
+void processPatients(PatientNode* root) {
+    Queue* q = createQueue();
+    enqueue(q, root);
+    while (!isEmpty(q)) {
+        PatientNode* current = dequeue(q);
+        treatPatient(current);
+        if (current->left) enqueue(q, current->left);
+        if (current->right) enqueue(q, current->right);
+    }
+}
+```
+
+**What characteristic of level-order traversal makes it suitable for this triage scenario?**","Level-order traversal processes nodes level by level (breadth-first), ensuring patients at the same priority level are treated before moving to next level, implementing fair FIFO-style processing.",1,published,medium,analyze,blank,c-programming,blank,blank,blank,It finds critical patients fastest,It processes all patients at the same level before moving deeper,It uses less memory than recursive traversals,It sorts patients by arrival time,2
+E-Learning Course Prerequisites,"**An online learning platform calculates total course duration:**
+
+```c
+int calculateTotalHours(Course* root) {
+    if (root == NULL) return 0;
+    return root->duration + 
+           calculateTotalHours(root->left) + 
+           calculateTotalHours(root->right);
+}
+```
+
+**If the tree has courses: Root(10hrs), Left(5hrs), Right(8hrs), Left->Left(3hrs), what is the total?**","The function recursively sums all node values: 10 + 5 + 8 + 3 = 26 hours.",1,published,easy,apply,blank,c-programming,blank,blank,blank,23,26,18,15,2
+Warehouse Inventory System,"**A warehouse counts total inventory items:**
+
+```c
+int countItems(Warehouse* root) {
+    if (root == NULL) return 0;
+    return 1 + countItems(root->left) + countItems(root->right);
+}
+```
+
+**For a complete binary tree of height 3, how many warehouse locations are counted?**","A complete binary tree of height h has 2^(h+1) - 1 nodes. For height 3: 2^4 - 1 = 15 nodes.",1,published,medium,apply,blank,c-programming,blank,blank,blank,7,8,15,16,3
+Smart Home Device Network,"**A smart home system measures network depth:**
+
+```c
+int findMaxDepth(Device* root) {
+    if (root == NULL) return 0;
+    int leftDepth = findMaxDepth(root->left);
+    int rightDepth = findMaxDepth(root->right);
+    return 1 + (leftDepth > rightDepth ? leftDepth : rightDepth);
+}
+```
+
+**What does this function calculate for the device network?**","The function calculates the height/depth of the tree - the longest path from root to any leaf node, representing the maximum hops needed to reach the farthest device.",1,published,medium,understand,blank,c-programming,blank,blank,blank,Total number of devices,Maximum depth/height of the tree,Number of leaf devices,Average distance between devices,2
+Cloud Storage Mirror System,"**A cloud storage service mirrors folder structures:**
+
+```c
+Folder* mirrorStructure(Folder* root) {
+    if (root == NULL) return NULL;
+    Folder* newRoot = createFolder(root->name);
+    newRoot->left = mirrorStructure(root->right);
+    newRoot->right = mirrorStructure(root->left);
+    return newRoot;
+}
+```
+
+**What transformation does this function perform?**","The function creates a mirror image by swapping left and right children at each node. If original has left child A and right child B, mirror has left child B and right child A.",1,published,hard,analyze,blank,c-programming,blank,blank,blank,Creates a duplicate tree,Creates a mirror/reflection by swapping left and right subtrees,Reverses the order of nodes,Balances the tree structure,2
+Gaming Achievement Tree,"**A game checks if two players have identical achievement trees:**
+
+```c
+bool compareAchievements(Achievement* tree1, Achievement* tree2) {
+    if (tree1 == NULL && tree2 == NULL) return true;
+    if (tree1 == NULL || tree2 == NULL) return false;
+    return (tree1->id == tree2->id) &&
+           compareAchievements(tree1->left, tree2->left) &&
+           compareAchievements(tree1->right, tree2->right);
+}
+```
+
+**What condition must be satisfied for the function to return true?**","Both trees must be structurally identical (same shape) and all corresponding nodes must have the same achievement ID values.",1,published,medium,analyze,blank,c-programming,blank,blank,blank,Both trees have the same number of nodes,Trees must be identical in structure and node values,Both trees have the same height,Trees must be balanced,2
+Restaurant Menu Navigator,"**A restaurant app finds specific menu items:**
+
+```c
+MenuItem* findDish(MenuItem* root, int dish_id) {
+    if (root == NULL || root->id == dish_id) return root;
+    MenuItem* leftResult = findDish(root->left, dish_id);
+    if (leftResult != NULL) return leftResult;
+    return findDish(root->right, dish_id);
+}
+```
+
+**What search strategy does this function implement?**","The function performs DFS (Depth-First Search), exploring left subtree completely before right subtree, searching every node until the target is found or tree is exhausted.",1,published,medium,apply,blank,c-programming,blank,blank,blank,Binary Search,Depth-First Search,Breadth-First Search,Linear Search,2
+Fitness Goal Tracker,"**A fitness app checks if goal tree is balanced:**
+
+```c
+bool isBalanced(Goal* root) {
+    if (root == NULL) return true;
+    int leftHeight = getHeight(root->left);
+    int rightHeight = getHeight(root->right);
+    if (abs(leftHeight - rightHeight) > 1) return false;
+    return isBalanced(root->left) && isBalanced(root->right);
+}
+```
+
+**What defines a balanced binary tree in this context?**","A balanced binary tree has the property that for every node, the heights of left and right subtrees differ by at most 1, ensuring O(log n) operations.",1,published,hard,understand,blank,c-programming,blank,blank,blank,All leaves are at the same level,Height difference between left and right subtrees is at most 1 for every node,The tree has equal number of nodes on left and right,All nodes have either 0 or 2 children,2
+Job Scheduling System,"**A task scheduler finds the lowest common ancestor of two tasks:**
+
+```c
+Task* findLCA(Task* root, int task1, int task2) {
+    if (root == NULL) return NULL;
+    if (root->id == task1 || root->id == task2) return root;
+    Task* leftLCA = findLCA(root->left, task1, task2);
+    Task* rightLCA = findLCA(root->right, task1, task2);
+    if (leftLCA && rightLCA) return root;
+    return leftLCA ? leftLCA : rightLCA;
+}
+```
+
+**What does the Lowest Common Ancestor represent in a task dependency tree?**","The LCA is the deepest (lowest) node that has both tasks as descendants, representing the earliest common prerequisite or parent task for both tasks.",1,published,hard,analyze,blank,c-programming,blank,blank,blank,The root of the tree,The deepest node that is an ancestor of both tasks,The parent of both tasks,The task that executes first,2
+Video Streaming Platform,"**A streaming service converts between tree representations:**
+
+```c
+void serializeTree(Video* root, FILE* file) {
+    if (root == NULL) {
+        fprintf(file, ""NULL "");
+        return;
+    }
+    fprintf(file, ""%d "", root->video_id);
+    serializeTree(root->left, file);
+    serializeTree(root->right, file);
+}
+```
+
+**What is the purpose of serialization in this video catalog system?**","Serialization converts the tree structure into a sequential format (string/file) that can be stored persistently or transmitted over network, then later reconstructed (deserialized).",1,published,medium,understand,blank,c-programming,blank,blank,blank,To sort videos by popularity,To convert tree to a storable/transmittable format,To compress the video data,To balance the tree structure,2
+Blockchain Transaction Tree,"**A blockchain validator sums all transaction values:**
+
+```c
+long long sumTransactions(Block* root) {
+    if (root == NULL) return 0;
+    return root->value + 
+           sumTransactions(root->left) + 
+           sumTransactions(root->right);
+}
+```
+
+**For a tree with Root(100), Left(50), Right(75), Left->Left(25), Right->Right(30), what is the sum?**","The function recursively adds all node values: 100 + 50 + 75 + 25 + 30 = 280.",1,published,easy,apply,blank,c-programming,blank,blank,blank,250,280,305,225,2
+Social Network Friend Suggestions,"**A social network finds users at a specific connection distance:**
+
+```c
+void findConnectionsAtLevel(User* root, int target_level, int current_level) {
+    if (root == NULL) return;
+    if (current_level == target_level) {
+        printf(""Suggested: %s\n"", root->name);
+        return;
+    }
+    findConnectionsAtLevel(root->left, target_level, current_level + 1);
+    findConnectionsAtLevel(root->right, target_level, current_level + 1);
+}
+```
+
+**What does this function accomplish in friend suggestion algorithm?**","The function finds and prints all users at exactly the specified connection level/distance from the root user, useful for suggesting friends of friends at a specific degree of separation.",1,published,medium,apply,blank,c-programming,blank,blank,blank,Finds the closest friends,Finds all users at a specific level/distance,Finds the most connected users,Finds mutual friends,2
+```
+
+## Instructions to Save:
+1. **Copy all the text** from the code block above (starting with `title,description...`)
+2. **Open a new file** in VS Code (`Ctrl+N` or `Cmd+N`)
+3. **Paste** the content
+4. **Save as** `binary_tree_dsa.csv` (`Ctrl+S` or `Cmd+S`)
+
+Your CSV with 20 Binary Tree MCQs is ready! 🎯
