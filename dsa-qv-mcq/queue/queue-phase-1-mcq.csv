@@ -1,0 +1,88 @@
+# Queue - DSA Assessment 
+
+
+```csv
+title,description,explanation,score,status,difficulty,bloomTaxonomy,tags,subjects,topics,subTopics,companies,option1,option2,option3,option4,answer
+Customer Service Helpline,"**A call center receives calls in this order: Alice, Bob, Charlie, David. Using a queue system, who gets served first?**","Queue follows FIFO (First In First Out) principle. Alice arrived first, so she is served first, then Bob, then Charlie, then David.",1,published,easy,understand,blank,dsa,blank,blank,blank,Alice,Bob,Charlie,David,1
+Print Job Queue,"**A network printer has jobs queued: Doc1, Doc2, Doc3, Doc4. After printing Doc1 and Doc2, a new job Doc5 arrives. What is the current queue state?**","After dequeuing Doc1 and Doc2, the queue has Doc3, Doc4. Enqueuing Doc5 adds it to the rear. Final queue: Doc3, Doc4, Doc5.",1,published,easy,apply,blank,dsa,blank,blank,blank,"Doc3, Doc4","Doc3, Doc4, Doc5","Doc5, Doc3, Doc4","Doc1, Doc2, Doc3",2
+Hospital Emergency Queue,"**An ER uses a priority queue where severity levels are: Critical(3), Urgent(2), Standard(1). Patients arrive: John(2), Mary(3), Steve(1), Lisa(3). Who is treated first?**","Priority queue dequeues based on highest priority first. Mary(3) and Lisa(3) have highest priority. Mary arrived first among priority 3, so Mary is treated first.",1,published,medium,apply,blank,dsa,blank,blank,blank,John,Mary,Steve,Lisa,2
+Restaurant Order System,"**A food delivery app uses a queue for orders. If 50 orders are placed and 30 are delivered, how many orders are waiting in the queue?**","Queue operations: 50 enqueues (orders added), 30 dequeues (orders delivered). Remaining = 50 - 30 = 20 orders still in queue.",1,published,easy,apply,blank,dsa,blank,blank,blank,20,30,50,80,1
+CPU Task Scheduler,"**An operating system uses Round Robin scheduling with a queue. Tasks T1, T2, T3 each need 10ms. Time quantum is 4ms. After first round, what is the queue order?**","Round Robin: T1 executes 4ms (6ms left), goes to back. T2 executes 4ms (6ms left), goes to back. T3 executes 4ms (6ms left), goes to back. Queue: T1(6ms), T2(6ms), T3(6ms).",1,published,medium,understand,blank,dsa,blank,blank,blank,"T1, T2, T3","T3, T2, T1","T2, T3, T1","All tasks completed",1
+Ticket Booking System,"**A concert ticket system queues 1000 users. The system processes 50 users per minute. How long before user at position 500 gets processed?**","User at position 500 means 499 users ahead. Time = 499 / 50 = 9.98 minutes ≈ 10 minutes.",1,published,medium,apply,blank,dsa,blank,blank,blank,5 minutes,10 minutes,15 minutes,20 minutes,2
+Circular Queue Buffer,"**A video streaming app uses a circular queue buffer of size 5 for frames. After enqueueing 5 frames and dequeuing 3, how many more frames can be enqueued before buffer is full?**","Circular queue size 5. Current state: 2 frames remain. Empty slots = 5 - 2 = 3. Can enqueue 3 more frames.",1,published,medium,apply,blank,dsa,blank,blank,blank,2,3,4,5,2
+Message Queue System,"**A chat application enqueues messages: M1, M2, M3. Then dequeues one message and enqueues M4, M5. What is the front of the queue?**","Initial: M1(front), M2, M3. Dequeue M1. Now M2(front), M3. Enqueue M4, M5. Queue: M2(front), M3, M4, M5.",1,published,easy,apply,blank,dsa,blank,blank,blank,M1,M2,M3,M4,2
+Breadth-First Search Application,"**A social network finds friends at exactly 2 connections away using BFS. Starting from User A, what data structure is essential for level-order traversal?**
+
+```python
+def find_friends_at_distance_2(user):
+    queue = [user]
+    visited = {user}
+    level = 0
+    
+    while queue:
+        level_size = len(queue)
+        if level == 2:
+            return queue  # Friends at distance 2
+        for _ in range(level_size):
+            current = queue.pop(0)
+            for friend in current.friends:
+                if friend not in visited:
+                    queue.append(friend)
+                    visited.add(friend)
+        level += 1
+```","BFS uses a queue to explore nodes level by level. Queue ensures friends at distance 1 are processed before distance 2, maintaining level-order traversal.",1,published,medium,understand,blank,dsa,blank,blank,blank,Stack,Queue,Array,Linked List,2
+Airport Security Checkpoint,"**An airport security has 3 lanes. Passengers are distributed evenly. If 150 passengers arrive, how many are in each lane's queue assuming perfect distribution?**","With 3 lanes and 150 passengers distributed evenly, each lane gets 150 / 3 = 50 passengers.",1,published,easy,apply,blank,dsa,blank,blank,blank,30,50,75,100,2
+Deque Implementation,"**A music player allows adding songs at both front and rear, and removing from both ends. What data structure is this?**","A deque (double-ended queue) allows insertion and deletion at both front and rear, unlike a regular queue which only allows rear insertion and front deletion.",1,published,easy,understand,blank,dsa,blank,blank,blank,Stack,Queue,Deque,Priority Queue,3
+Bank Teller System,"**A bank has 4 tellers. Customers arrive at rate of 20/minute and each teller serves 6/minute. Is the system stable?**","Total service rate = 4 tellers × 6 customers/minute = 24 customers/minute. Arrival rate = 20/minute. Since 24 > 20, system is stable (can handle load).",1,published,medium,analyze,blank,dsa,blank,blank,blank,"No, queue grows infinitely","Yes, system can handle the load","Depends on customer patience","Need more information",2
+Queue Using Stacks,"**A notification system implements a queue using two stacks. What is the time complexity of dequeue operation in the worst case?**
+
+```python
+class QueueUsingStacks:
+    def __init__(self):
+        self.stack1 = []  # for enqueue
+        self.stack2 = []  # for dequeue
+    
+    def dequeue(self):
+        if not self.stack2:
+            while self.stack1:
+                self.stack2.append(self.stack1.pop())
+        return self.stack2.pop()
+```","Worst case: stack2 is empty and all n elements are in stack1. Need to move all n elements from stack1 to stack2, taking O(n) time.",1,published,hard,analyze,blank,dsa,blank,blank,blank,O(1),O(log n),O(n),O(n²),3
+Cache Replacement Policy,"**A web browser cache uses a queue-based FIFO replacement policy with capacity 4. Pages accessed: P1, P2, P3, P4, P5. Which page is evicted when P5 is accessed?**","FIFO queue with capacity 4. When P5 arrives and cache is full, P1 (first in) is evicted first, making room for P5.",1,published,medium,apply,blank,dsa,blank,blank,blank,P1,P2,P4,P5,1
+Traffic Light Simulation,"**A smart traffic system uses queues for each lane. North lane has 15 cars, South has 10. If North gets 30 seconds (serving 10 cars) and South gets 20 seconds (serving 7 cars), how many cars remain in total?**","North: 15 - 10 = 5 cars remain. South: 10 - 7 = 3 cars remain. Total = 5 + 3 = 8 cars remaining.",1,published,medium,apply,blank,dsa,blank,blank,blank,8,12,15,18,1
+Event-Driven System,"**A game engine processes events in a queue: KeyPress, MouseClick, KeyRelease, Collision. After processing 2 events and adding NetworkUpdate, what's at the front?**","Initial queue: KeyPress, MouseClick, KeyRelease, Collision. Process 2: removes KeyPress and MouseClick. Add NetworkUpdate to rear. Front is now KeyRelease.",1,published,easy,apply,blank,dsa,blank,blank,blank,KeyPress,MouseClick,KeyRelease,NetworkUpdate,3
+Sliding Window Maximum,"**A stock trading algorithm tracks maximum price in last 3 transactions using a deque. Prices: [1, 3, -1, -3, 5, 3, 6, 7]. What's the maximum for window starting at -1?**
+
+```python
+def max_sliding_window(prices, k):
+    deque = []  # stores indices
+    result = []
+    
+    for i in range(len(prices)):
+        # Remove elements outside window
+        while deque and deque[0] < i - k + 1:
+            deque.pop(0)
+        # Remove smaller elements
+        while deque and prices[deque[-1]] < prices[i]:
+            deque.pop()
+        deque.append(i)
+        if i >= k - 1:
+            result.append(prices[deque[0]])
+    return result
+```","Window starting at -1: [-1, -3, 5]. Maximum value in this window is 5.",1,published,hard,apply,blank,dsa,blank,blank,blank,-1,3,5,6,3
+Multi-Level Feedback Queue,"**An OS uses multi-level feedback queue with 3 levels: Q1(high priority), Q2(medium), Q3(low). A CPU-intensive task starts in Q1. Where does it likely end up?**","Multi-level feedback queue demotes CPU-intensive tasks to lower priority queues to give preference to I/O-bound tasks. CPU-intensive task moves from Q1 → Q2 → Q3.",1,published,medium,understand,blank,dsa,blank,blank,blank,Remains in Q1,Moves to Q2,Moves to Q3,Gets terminated,3
+Circular Queue Advantage,"**A real-time sensor system collects data continuously into a fixed-size buffer. Why is a circular queue better than a linear queue?**","Circular queue reuses space from dequeued elements by wrapping around, avoiding the need to shift elements or waste space. Linear queue would leave unusable space at the front.",1,published,medium,understand,blank,dsa,blank,blank,blank,Faster enqueue operations,Reuses space efficiently without shifting elements,Uses less memory,Supports priority ordering,2
+Producer-Consumer Problem,"**A video encoding system has 5 producers adding frames and 3 consumers processing frames. The queue has max capacity 100. What happens when queue is full?**","In producer-consumer problem with bounded queue, when queue reaches max capacity (100), producers must wait (block) until consumers remove frames and create space.",1,published,medium,understand,blank,dsa,blank,blank,blank,Oldest frames are overwritten,Producers block/wait until space is available,New frames are dropped,System crashes,2
+Network Packet Router,"**A router has incoming packet rate of 1000 packets/sec and outgoing rate of 800 packets/sec. What happens to the queue over time?**","Incoming rate (1000) > Outgoing rate (800). Queue grows by 200 packets/sec indefinitely. This is an unstable system leading to buffer overflow.",1,published,medium,analyze,blank,dsa,blank,blank,blank,Queue remains constant,Queue grows indefinitely,Queue eventually empties,Queue oscillates,2
+Printer Spooler Priority,"**A printer queue processes: Job1(10 pages, priority 2), Job2(5 pages, priority 1), Job3(8 pages, priority 2). Using priority queue (higher number = higher priority), what is the printing order?**","Priority queue orders by priority first. Job1(priority 2) and Job3(priority 2) are processed before Job2(priority 1). Among same priority, FIFO applies: Job1, then Job3, then Job2.",1,published,medium,apply,blank,dsa,blank,blank,blank,"Job1, Job2, Job3","Job2, Job1, Job3","Job1, Job3, Job2","Job3, Job1, Job2",3
+Web Server Request Queue,"**A web server queue holds 500 requests. If 100 requests timeout after 30 seconds and 150 new requests arrive, what's the queue size?**","Initial: 500 requests. Remove 100 (timeout). Remaining: 400. Add 150 new. Final: 400 + 150 = 550 requests.",1,published,easy,apply,blank,dsa,blank,blank,blank,450,500,550,650,3
+Queue Implementation Array vs Linked List,"**An email server processes millions of emails daily with unpredictable volume spikes. Which queue implementation is more suitable?**","Linked list-based queue dynamically grows/shrinks without size limitations, handling volume spikes better. Array-based queue has fixed size or requires costly resizing operations.",1,published,medium,analyze,blank,dsa,blank,blank,blank,Array-based queue,Linked list-based queue,Circular array queue,Static array queue,2
+Ride-Sharing Driver Queue,"**A ride-sharing app has 20 drivers in queue. 5 accept rides and leave. 8 new drivers join. 3 more accept rides. How many drivers remain?**","Initial: 20 drivers. Remove 5: 20-5=15. Add 8: 15+8=23. Remove 3: 23-3=20. Final: 20 drivers.",1,published,easy,apply,blank,dsa,blank,blank,blank,18,20,23,25,2
+Task Scheduling Latency,"**A real-time system processes tasks in a queue. Average arrival rate is 50 tasks/sec and service rate is 60 tasks/sec. What is the system's utilization?**","Utilization = Arrival rate / Service rate = 50 / 60 = 0.833 or 83.3%. This means the system is 83.3% busy.",1,published,hard,analyze,blank,dsa,blank,blank,blank,50%,75%,83.3%,120%,3
+Level Order Tree Traversal,"**A file system displays folders level by level: Root, then immediate subfolders, then their subfolders. What traversal method and data structure are used?**","Level-order (BFS) traversal uses a queue. Enqueue root, dequeue and process, then enqueue its children. This ensures level-by-level processing.",1,published,medium,understand,blank,dsa,blank,blank,blank,"Depth-first with stack","Breadth-first with queue","Inorder with recursion","Preorder with array",2
+Circular Buffer Overrun,"**An audio streaming app uses a circular queue of size 100 for audio chunks. If producer adds 120 chunks while consumer is paused, what happens in a well-designed system?**","In a well-designed bounded queue, when full (100 chunks), producer should block or drop excess chunks. The 20 extra chunks cannot be added without consumer removing some.",1,published,medium,analyze,blank,dsa,blank,blank,blank,All 120 chunks stored,Producer blocks after 100 chunks or drops excess,Oldest chunks overwritten,System crashes,2
+Job Scheduler Fairness,"**A batch processing system uses a queue to ensure fair job execution. Jobs arrive: J1(2hrs), J2(1hr), J3(3hrs), J4(1hr). Using FIFO, what's the average waiting time?**","FIFO order: J1 starts at 0 (wait 0), J2 starts at 2 (wait 2), J3 starts at 3 (wait 3), J4 starts at 6 (wait 6). Average wait = (0+2+3+6)/4 = 2.75 hours.",1,published,hard,apply,blank,dsa,blank,blank,blank,1.5 hours,2.75 hours,3 hours,4 hours,2
+Double-Ended Queue Operations,"**A browser implements undo/redo using a deque. User performs: Action1, Action2, Undo, Action3. The redo option should:**","After Action1, Action2, Undo (removes Action2 and puts in redo), then Action3 is performed. Action3 invalidates the redo stack (Action2), so redo should be disabled.",1,published,medium,analyze,blank,dsa,blank,blank,blank,Redo Action1,Redo Action2,Be disabled (no valid redo),Redo Action3,3
+Queue in Graph Algorithms,"**A maps application finds shortest path from location A to B using BFS. Why is a queue essential for this algorithm?**","BFS with a queue guarantees shortest path in unweighted graphs by exploring all nodes at distance k before exploring nodes at distance k+1, ensuring the first path found is shortest.",1,published,hard,understand,blank,dsa,blank,blank,blank,Queue sorts paths by length,Queue ensures level-by-level exploration guaranteeing shortest path first,Queue reduces memory usage,Queue enables parallel processing,2
+```
+
