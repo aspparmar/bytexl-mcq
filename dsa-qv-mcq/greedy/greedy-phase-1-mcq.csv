@@ -1,0 +1,91 @@
+# Greedy Algorithms - DSA Assessment (CSV Format)
+
+Below is your CSV data with 30 industry-oriented MCQs. **Copy everything from the code block below** and save it as a `.csv` file:
+
+```csv
+title,description,explanation,score,status,difficulty,bloomTaxonomy,tags,subjects,topics,subTopics,companies,option1,option2,option3,option4,answer
+Meeting Room Scheduler,"**A conference center needs to schedule maximum meetings in one room. Available slots: M1(9-10), M2(9:30-11), M3(10-11:30), M4(11-12), M5(11:30-1). Which meetings should be selected?**","Greedy approach: Select meeting with earliest finish time first. Order by finish: M1(10), M2(11), M3(11:30), M4(12), M5(1). Pick M1, then M4 (starts after M1), then M5 (starts after M4). Maximum = 3 meetings.",1,published,medium,apply,blank,dsa,blank,blank,blank,"M1, M2, M3","M1, M4, M5","M2, M4, M5","M1, M3, M5",2
+Currency Exchange Optimization,"**You have $100 and need to make change using minimum coins. Available: $50, $20, $10, $5, $1. How many coins are needed?**","Greedy approach with largest denomination first: 1×$50 + 2×$20 + 1×$10 = $100. Total = 4 coins. This works because US currency denominations are canonical (greedy gives optimal solution).",1,published,easy,apply,blank,dsa,blank,blank,blank,3,4,5,6,2
+Task Scheduling with Deadlines,"**A freelancer has jobs: J1(profit=$50, deadline=2), J2($20, deadline=1), J3($30, deadline=2), J4($30, deadline=1). Each takes 1 day. Maximum profit by deadline?**
+
+```python
+def max_profit_jobs(jobs):
+    # Sort by profit (descending)
+    jobs.sort(key=lambda x: x.profit, reverse=True)
+    
+    # J1(50,d=2), J3(30,d=2), J4(30,d=1), J2(20,d=1)
+    # Day 1: J4 or J2? Pick J4 (higher profit)
+    # Day 2: J1 (highest remaining)
+    # Total: 50 + 30 = 80
+    
+    schedule = [None] * max_deadline
+    for job in jobs:
+        # Find latest available slot before deadline
+        for slot in range(min(max_deadline, job.deadline) - 1, -1, -1):
+            if schedule[slot] is None:
+                schedule[slot] = job
+                break
+    return sum(job.profit for job in schedule if job)
+```","Sort by profit: J1($50), J3($30), J4($30), J2($20). Fill slots: Day 2←J1, Day 1←J3 (can't fit J4 as day 1 taken). Wait, recalculate: Day 1←J4, Day 2←J1. Profit = $80.",1,published,hard,apply,blank,dsa,blank,blank,blank,$70,$80,$100,$110,2
+Fractional Knapsack Problem,"**A delivery truck (capacity 50kg) loads packages: P1(20kg, $60), P2(30kg, $100), P3(10kg, $120). Items can be divided. Maximum value?**","Calculate value/weight ratio: P1(60/20=3), P2(100/30=3.33), P3(120/10=12). Greedy: Take all P3($120), all P1($60), remaining 20kg of P2(20/30×$100=$66.67). Total = $246.67.",1,published,hard,apply,blank,dsa,blank,blank,blank,$180,$220,$246.67,$280,3
+Huffman Coding Compression,"**A file has characters: A(45%), B(13%), C(12%), D(16%), E(9%), F(5%). Using Huffman coding, which characters get shortest codes?**","Huffman builds tree by combining lowest frequency nodes. Character A (45% - highest frequency) gets shortest code (likely 1 bit). Lower frequency characters get longer codes for optimal compression.",1,published,medium,understand,blank,dsa,blank,blank,blank,"E and F","A and D","B and C","All equal length",2
+Activity Selection Optimization,"**A machine can process one job at a time. Jobs arrive: J1(start=1, end=3), J2(2,5), J3(4,7), J4(6,9), J5(8,10). Greedy selects jobs by earliest finish time. Which jobs are selected?**","Sort by finish time: J1(end=3), J2(5), J3(7), J4(9), J5(10). Select J1. Next compatible: J3(starts at 4, after J1 ends). Next: J5(starts at 8, after J3 ends). Selected: J1, J3, J5.",1,published,medium,apply,blank,dsa,blank,blank,blank,"J1, J2, J3","J1, J3, J5","J1, J4, J5","J2, J4, J5",2
+Platform Assignment Problem,"**A railway station has 2 platforms. Trains arrive/depart: T1(9:00-9:30), T2(9:20-10:00), T3(9:50-10:30), T4(10:00-10:30). What's the minimum platforms needed?**","Find maximum overlap: At 9:50, trains T1 done, T2 (till 10:00), T3 (9:50-10:30) = 2 trains. At 10:00-10:30: T3, T4 = 2 trains. Maximum simultaneous trains = 2, so 2 platforms sufficient.",1,published,medium,analyze,blank,dsa,blank,blank,blank,1,2,3,4,2
+Dijkstra's Shortest Path Greedy Choice,"**In Dijkstra's algorithm for finding shortest path from source S to all nodes, why does the greedy choice of always selecting the unvisited node with minimum distance work?**","Once a node is processed in Dijkstra's, its shortest distance is finalized because: (1) All edges have non-negative weights, (2) Any alternate path would go through unprocessed nodes with higher distances, making them longer. The greedy choice is optimal.",1,published,hard,understand,blank,dsa,blank,blank,blank,It's just a heuristic that works most times,Negative edge weights ensure correctness,Non-negative weights guarantee no shorter path exists through unprocessed nodes,The graph must be connected for it to work,3
+Egyptian Fraction Representation,"**A payment system represents 5/6 as sum of unit fractions (1/n). Greedy approach: repeatedly subtract largest unit fraction that fits. What's the representation?**","Start with 5/6. Largest unit fraction ≤ 5/6 is 1/2. Remaining: 5/6 - 1/2 = 5/6 - 3/6 = 2/6 = 1/3. Result: 5/6 = 1/2 + 1/3.",1,published,medium,apply,blank,dsa,blank,blank,blank,1/2 + 1/4,1/2 + 1/3,1/3 + 1/3,1/2 + 1/6,2
+Prim's MST Greedy Strategy,"**A telecom company connects 5 cities with fiber optic cables to minimize cost. Prim's algorithm starts from city A. Why does always choosing the minimum weight edge connecting the tree to a new vertex guarantee a Minimum Spanning Tree?**","Cut property: For any cut dividing vertices into two sets, the minimum weight edge crossing the cut is in some MST. Prim's always picks minimum edge from tree to non-tree vertices (a cut), guaranteeing optimality.",1,published,hard,understand,blank,dsa,blank,blank,blank,It's a probabilistic guarantee only,The algorithm backtracks if needed,Cut property ensures minimum edge crossing any cut is in MST,Works only for complete graphs,3
+Gas Station Circuit Problem,"**A truck travels circular route with gas stations. Stations have gas: [1,2,3,4,5] and costs between stations: [3,4,5,1,2]. Starting from which station can complete the circuit?**
+
+```python
+def can_complete_circuit(gas, cost):
+    if sum(gas) < sum(cost):
+        return -1  # Impossible
+    
+    start = 0
+    tank = 0
+    
+    for i in range(len(gas)):
+        tank += gas[i] - cost[i]
+        if tank < 0:
+            start = i + 1
+            tank = 0
+    
+    return start
+```","Greedy approach: If total gas ≥ total cost, solution exists. Track running balance. When tank becomes negative, start must be after current position. Running balance at each station determines feasible start. Start from station 3 (index 3).",1,published,hard,apply,blank,dsa,blank,blank,blank,Station 0,Station 1,Station 3,Station 4,3
+Load Balancing Servers,"**A cloud provider assigns 5 tasks (processing times: 2hr, 3hr, 4hr, 3hr, 2hr) to 2 servers to minimize maximum load. Using greedy approach of assigning each task to server with current minimum load, what's the final distribution?**","Greedy assignment: Server1←4hr, Server2←3hr, Server1←3hr(total 7), Server2←2hr(total 5), Server1←2hr(total 9). S1: 4+3+2=9hrs, S2: 3+2=5hrs. Note: This greedy doesn't guarantee optimal for load balancing.",1,published,medium,apply,blank,dsa,blank,blank,blank,"S1: 7hrs, S2: 7hrs","S1: 9hrs, S2: 5hrs","S1: 8hrs, S2: 6hrs","S1: 6hrs, S2: 8hrs",2
+Interval Partitioning Problem,"**A university schedules courses in classrooms. Courses: C1(9-10), C2(9:30-10:30), C3(10-11), C4(10:30-11:30), C5(11-12). What's minimum classrooms needed?**","Find maximum number of overlapping intervals. At 10:00-10:30: C1(till 10), C2(9:30-10:30), C3(10-11) = 3 courses overlap. Need 3 classrooms. Greedy: assign to first available room.",1,published,medium,apply,blank,dsa,blank,blank,blank,2,3,4,5,2
+Kruskal's MST Edge Selection,"**Building a network infrastructure for 4 offices with connection costs: A-B($10), A-C($15), A-D($20), B-C($12), B-D($25), C-D($8). Using Kruskal's, which edges are selected?**","Kruskal's sorts edges: C-D(8), A-B(10), B-C(12), A-C(15), A-D(20), B-D(25). Pick C-D(8), A-B(10), B-C(12). Now all 4 nodes connected. Total: 3 edges (n-1 for n=4 nodes). A-C would create cycle, skip.",1,published,medium,apply,blank,dsa,blank,blank,blank,"C-D, A-B, A-C","C-D, A-B, B-C","A-B, B-C, C-D","A-B, A-C, A-D",2
+Page Replacement FIFO vs Optimal,"**A system has 3 page frames. Page reference string: 7,0,1,2,0,3,0,4. Using greedy FIFO replacement, how many page faults occur?**","FIFO: Load 7,0,1 (3 faults). Access 2→replace 7 (4 faults). Access 0→hit. Access 3→replace 0 (5 faults). Access 0→replace 1 (6 faults). Access 4→replace 2 (7 faults). Total = 7 page faults.",1,published,medium,apply,blank,dsa,blank,blank,blank,5,6,7,8,3
+Coin Change Non-Canonical System,"**A country has coins: 1¢, 3¢, 4¢. To make 6¢, greedy algorithm (largest first) gives 4¢+1¢+1¢ = 3 coins. What's the optimal solution?**","Greedy: 4¢+1¢+1¢ = 3 coins. Optimal: 3¢+3¢ = 2 coins. This demonstrates greedy doesn't always work for coin change with non-canonical denominations. Dynamic programming needed for optimality.",1,published,hard,analyze,blank,dsa,blank,blank,blank,"2 coins (3¢+3¢), greedy is not optimal","3 coins, greedy is optimal","4 coins","1 coin",1
+Optimal Merge Pattern,"**A file system merges sorted files: F1(20MB), F2(30MB), F3(10MB), F4(15MB). Merging two files of sizes x and y costs (x+y) comparisons. What's minimum total cost to merge all into one?**","Greedy: Always merge two smallest files (like Huffman). Merge F3(10)+F4(15)=25, cost 25. Merge F1(20)+F2(30)=50, cost 50. Merge 25+50=75, cost 75. Total cost = 25+50+75 = 150 comparisons. Wrong! Should be: F3+F4=25(cost 25), then 25+F1=45(cost 45), then 45+F2=75(cost 75). Total=145.",1,published,hard,apply,blank,dsa,blank,blank,blank,95,145,150,175,2
+Stock Buy-Sell Maximum Profit,"**Stock prices over 6 days: [100, 180, 260, 310, 40, 535]. You can buy and sell multiple times (must sell before next buy). Using greedy approach of capturing every upward price movement, what's maximum profit?**
+
+```python
+def max_profit(prices):
+    profit = 0
+    for i in range(1, len(prices)):
+        if prices[i] > prices[i-1]:
+            profit += prices[i] - prices[i-1]
+    return profit
+```","Greedy: Capture every price increase. (180-100)+(260-180)+(310-260)+(535-40) = 80+80+50+495 = 705. This works because sum of increments equals (max - min) for any increasing sequence.",1,published,medium,apply,blank,dsa,blank,blank,blank,435,535,705,800,3
+Minimum Platforms Railway Problem,"**Trains arrive/depart: T1(9:00am-9:10am), T2(9:05am-9:15am), T3(9:15am-9:30am), T4(9:20am-9:40am). What's minimum platforms required?**","Create events: Arrivals at 9:00, 9:05, 9:15, 9:20. Departures at 9:10, 9:15, 9:30, 9:40. Sort all events. Track platforms: +1 for arrival, -1 for departure. At 9:20 (before any departure after 9:15): 3 trains present (T2,T3,T4). Maximum = 3 platforms needed.",1,published,medium,apply,blank,dsa,blank,blank,blank,2,3,4,5,2
+Fractional vs 0-1 Knapsack,"**Given items: I1(10kg, $60), I2(20kg, $100), I3(30kg, $120) and bag capacity 50kg. Why can fractional knapsack use greedy (value/weight ratio) but 0-1 knapsack cannot?**","Fractional knapsack has optimal substructure with greedy: taking highest value/weight ratio is always optimal as we can take fractions. 0-1 knapsack lacks this because taking/rejecting item affects future choices non-locally, needing DP.",1,published,hard,analyze,blank,dsa,blank,blank,blank,Both can use greedy equally well,Fractional allows partial items preserving greedy optimality; 0-1 has interdependent choices,0-1 is simpler so needs less optimization,Weight constraints differ between problems,2
+Job Sequencing with Penalties,"**Jobs with deadlines and penalties if missed: J1(d=2, penalty=$100), J2(d=1, $80), J3(d=3, $60), J4(d=1, $40). Schedule to minimize total penalty?**","Greedy: Minimize penalty = maximize completion. Sort by penalty: J1($100), J2($80), J3($60), J4($40). Schedule J1 at day 2, J2 at day 1, J3 at day 3. J4 cannot fit, penalty $40. Minimum total penalty = $40.",1,published,hard,apply,blank,dsa,blank,blank,blank,$40,$60,$80,$100,1
+Water Connection Problem,"**Houses in a row need water tanks. Houses at positions: [1, 3, 6, 9, 12]. Tank range is 3 units. Minimum tanks needed to cover all houses?**","Greedy: Cover leftmost uncovered house with rightmost tank that covers it. House 1: tank at 4 (covers 1-7). House 9: tank at 12 (covers 9-15). Total = 2 tanks. This works because pushing tank right covers more future houses.",1,published,medium,apply,blank,dsa,blank,blank,blank,2,3,4,5,1
+Earliest Deadline First Scheduling,"**Real-time tasks with deadlines: T1(execution=3, deadline=6), T2(1,2), T3(2,5), T4(1,4). EDF schedules task with earliest absolute deadline. What's the schedule order?**","At time 0, deadlines: T1(6), T2(2), T3(5), T4(4). Schedule T2 (earliest deadline). At t=1, schedule T4. At t=2, schedule T3. At t=4, schedule T1. Order: T2→T4→T3→T1.",1,published,medium,apply,blank,dsa,blank,blank,blank,"T1, T2, T3, T4","T2, T3, T4, T1","T2, T4, T3, T1","T4, T2, T3, T1",3
+Optimal Binary Search Tree Approximation,"**A search system has keys with access frequencies: K1(0.5), K2(0.3), K3(0.2). Greedy builds tree by placing highest frequency at root recursively. Why doesn't this guarantee optimal BST?**","Greedy root selection doesn't consider search path costs to descendants. Optimal BST minimizes total weighted path length (frequency × depth), requiring dynamic programming as subtree choices are interdependent.",1,published,hard,understand,blank,dsa,blank,blank,blank,It does guarantee optimal BST,Subtree costs are interdependent requiring DP; greedy ignores total path cost optimization,Greedy is too slow for this problem,BSTs cannot be optimized,2
+Rope Cutting Problem,"**Cut a 20m rope into pieces of lengths [5, 10, 5] with cost = product of lengths being cut. Each cut divides rope into two. What cutting order minimizes cost?**","This is NOT a greedy problem (needs DP), but greedy attempt would cut to maximize equal pieces. Optimal: cut 20→10+10 (cost 200), then each 10→5+5 (cost 100 each). Total = 200+100+100 = 400. Greedy might not find this.",1,published,hard,analyze,blank,dsa,blank,blank,blank,300,400,500,This requires dynamic programming not greedy,4
+Minimum Product Subset,"**An array has numbers: [-3, -2, 1, 4, -5]. Select minimum size subset whose product is negative. Greedy approach?**","Greedy: For negative product, need odd number of negatives. Pick single largest negative: -2. This gives minimum size (1) with negative product. If all positive, need at least 1 negative.",1,published,medium,apply,blank,dsa,blank,blank,blank,"Select -5 and 1","Select -2 only","Select all negatives","Select -3, -2, -5",2
+Maximize Array Sum After K Negations,"**Array: [2, -3, -1, 5, -4]. You can change sign of k=2 elements. What's maximum possible sum using greedy approach?**","Greedy: Negate most negative first. Negate -4→4, negate -3→3. Array becomes [2, 3, -1, 5, 4]. Sum = 2+3+(-1)+5+4 = 13.",1,published,medium,apply,blank,dsa,blank,blank,blank,9,11,13,15,3
+Spanning Tree Edge Count,"**A connected graph has 12 vertices. Its minimum spanning tree using Kruskal's or Prim's will have how many edges?**","Any spanning tree of a connected graph with n vertices has exactly n-1 edges. For 12 vertices: 12-1 = 11 edges. This is true regardless of algorithm (Kruskal's, Prim's, etc.).",1,published,easy,understand,blank,dsa,blank,blank,blank,10,11,12,13,2
+Scheduling to Minimize Lateness,"**Tasks with durations and deadlines: T1(d=4, deadline=6), T2(3,8), T3(2,9), T4(1,10). Greedy schedules by earliest deadline. Maximum lateness?**","Schedule by deadline: T1(0-4, due 6, lateness 0), T2(4-7, due 8, lateness 0), T3(7-9, due 9, lateness 0), T4(9-10, due 10, lateness 0). Max lateness = 0. Earliest deadline first minimizes maximum lateness.",1,published,medium,apply,blank,dsa,blank,blank,blank,0,1,2,3,1
+Maximize Height Pyramid,"**Building a pyramid with blocks: bottom row needs n blocks, next needs n-1, continuing to top (1 block). You have 15 blocks total. Using greedy approach (build largest base possible), what's maximum height?**","Try base sizes: Base 5 needs 5+4+3+2+1=15 blocks exactly. Height = 5. Base 6 needs 21 blocks (too many). Greedy builds largest possible base that fits available blocks.",1,published,medium,apply,blank,dsa,blank,blank,blank,4,5,6,7,2
+```
+
+## Instructions to Save:
+1. **Copy all the text** from the code block above (starting with `title,description...`)
+2. **Open a new file** in VS Code (`Ctrl+N` or `Cmd+N`)
+3. **Paste** the content
+4. **Save as** `greedy_algorithms_dsa.csv` (`Ctrl+S` or `Cmd+S`)
+
+Your CSV with 30 high-quality Greedy Algorithm MCQs is ready! 🎯
