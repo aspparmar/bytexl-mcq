@@ -1,0 +1,81 @@
+# DSA Best Mixed Questions - Next 10 (CSV Format)
+
+Below is your CSV data with 10 more best handpicked MCQs across all topics. **Copy everything from the code block below** and save it as a `.csv` file:
+
+```csv
+title,description,explanation,score,status,difficulty,bloomTaxonomy,tags,subjects,topics,subTopics,companies,option1,option2,option3,option4,answer
+Counting Sort Range Explosion,"**A banking system sorts 10 million transactions by amount. Amounts range from $0.01 to $1,000,000.00 (stored as cents: 1 to 100,000,000). Developer proposes Counting Sort for O(n+k) linear time. Senior architect rejects. What is the critical flaw?**","Counting Sort time O(n+k) where n=transactions, k=range. Here n=10M, k=100M, so O(10M + 100M) = O(110M). Space O(k) = O(100M) for count array. When k >> n, counting sort becomes impractical - both time and space dominated by range, not input size. QuickSort O(n log n) = O(10M × 23) ≈ O(230M) comparisons seems worse, but doesn't need 100M auxiliary array. Counting sort optimal only when k ≤ n or k is small constant. Critical lesson: hidden constant k in O(n+k) matters enormously.",1,published,hard,analyze,blank,dsa,blank,blank,blank,Counting sort works perfectly for this scenario,"When k >> n (100M >> 10M), counting sort impractical; O(n+k) dominated by range, huge space overhead",Counting sort always faster than O(n log n),Just need more memory,2
+Graph Cycle Detection DFS vs Union-Find,"**A task scheduling system has 100K tasks with dependency relationships. Must detect circular dependencies before execution. DFS cycle detection: O(V+E) time, O(V) space. Union-Find: O(E×α(V)) time where α is inverse Ackermann. Which approach is better and why?**","For cycle detection in directed graph, DFS with recursion stack is standard: O(V+E) time marking nodes as visiting/visited. Detects cycle when edge points to 'visiting' node. Union-Find works for undirected graphs but fails for directed graphs - can't distinguish back edges from cross edges. For 100K tasks, DFS is correct approach. Union-Find optimal for minimum spanning tree or connected components in undirected graphs. This tests understanding that algorithm choice depends on graph properties (directed vs undirected), not just complexity.",1,published,hard,analyze,blank,dsa,blank,blank,blank,Union-Find faster with better complexity,"DFS O(V+E) correct for directed graph; Union-Find doesn't work for directed cycle detection",Both equivalent for this problem,Union-Find needs path compression,2
+HeapSort vs QuickSort Consistency,"**A real-time trading system requires sorting 50K stock prices every 100ms with hard deadline. Cannot tolerate occasional slowdowns. QuickSort average O(n log n) but O(n²) worst case. HeapSort guarantees O(n log n) worst case. Which should be chosen and what's the trade-off?**","HeapSort guarantees O(n log n) in all cases - no worst-case pathology, critical for real-time systems with hard deadlines. Trade-off: QuickSort typically 2-3x faster on average due to better cache locality (sequential access) and fewer swaps. HeapSort has poor cache performance (heap operations jump around array) and more swaps. For soft real-time (average matters), QuickSort with randomization. For hard real-time (deadlines must be met), HeapSort's consistency critical despite being slower on average. Real systems: use QuickSort with fallback to HeapSort if recursion too deep (IntroSort pattern).",1,published,hard,analyze,blank,dsa,blank,blank,blank,"QuickSort faster on average, always choose it","HeapSort for guaranteed O(n log n) meeting hard deadlines; trades average-case speed for worst-case consistency",Both equivalent for real-time,Use merge sort instead,2
+LCS vs Edit Distance,"**A plagiarism detection system compares two documents. System 1 finds Longest Common Subsequence (LCS) to measure similarity. System 2 calculates Edit Distance to measure dissimilarity. Both use DP with O(mn) time and space. For texts of length m and n, what's the relationship?**","LCS and Edit Distance are duals: Edit Distance = m + n - 2×LCS_length (allowing only insertions and deletions). If LCS is long, few edits needed. Both O(mn) time and space with DP. However, Edit Distance with insertions, deletions, AND substitutions needs different formula. For plagiarism: high LCS indicates copying. For spell-check: low Edit Distance suggests typo. Subtle difference: LCS preserves order, Edit Distance measures transformation cost. Both useful but serve different purposes - similarity vs transformation.",1,published,hard,understand,blank,dsa,blank,blank,blank,LCS and Edit Distance measure completely different things,"Edit Distance = m + n - 2×LCS when only insertions/deletions; they're complementary measures",Edit Distance always smaller than LCS,No mathematical relationship exists,2
+Binary Tree Level-Order Space,"**A file system prints directory structure level-by-level using BFS. For perfectly balanced binary tree with n=1,000,000 nodes, what is the maximum queue size during traversal?**
+
+```python
+def level_order_traversal(root):
+    if not root:
+        return []
+    
+    queue = [root]
+    result = []
+    
+    while queue:
+        level_size = len(queue)
+        current_level = []
+        
+        for _ in range(level_size):
+            node = queue.pop(0)
+            current_level.append(node.value)
+            
+            if node.left:
+                queue.append(node.left)
+            if node.right:
+                queue.append(node.right)
+        
+        result.append(current_level)
+    
+    return result
+```
+
+**What determines maximum queue size?**","BFS queue size equals number of nodes at deepest/widest level. For balanced binary tree, maximum width at last level (leaf level). Perfectly balanced tree of height h has 2^h leaf nodes. With n=1,000,000, height h ≈ log₂(n) ≈ 20, so 2^20 ≈ 500,000 leaf nodes. Queue must hold approximately n/2 leaf nodes simultaneously. Space complexity O(n) not O(log n). Contrast with DFS using recursion: O(h) = O(log n) space for balanced tree. For space-constrained systems, DFS preferred despite BFS being conceptually simpler for level-order.",1,published,hard,analyze,blank,dsa,blank,blank,blank,O(log n) due to tree height,"O(n/2) at last level with ~500K leaf nodes; BFS space O(width) not O(height)",O(n) storing all nodes,O(1) with optimization,2
+Dijkstra's Negative Weight Failure,"**A delivery routing system uses Dijkstra's shortest path algorithm. Routes have distances and toll credits (negative weights) that reduce total cost. Network: A→B (5), B→C (3), A→C (10), C→D (-8). Dijkstra finds A→C→D with cost 10+(-8)=2. What's wrong?**","Dijkstra's greedy assumption: once node processed, shortest path finalized. Works ONLY with non-negative weights. With negative weights, processing node X doesn't guarantee shortest path - later path through negative edge might be shorter. Here, path A→B→C→D = 5+3+(-8) = 0 is shorter than A→C→D = 2, but Dijkstra might process C before finding B→C, locking in suboptimal path. Bellman-Ford handles negative weights correctly with O(VE) time, relaxing all edges V-1 times. Also detects negative cycles. This is critical failure mode many developers miss.",1,published,hard,analyze,blank,dsa,blank,blank,blank,Dijkstra handles negative weights correctly,"Dijkstra fails with negative weights; greedy choice invalid, may finalize suboptimal paths",Just need to modify comparison,Negative weights only affect space complexity,2
+Rabin-Karp Hash Collision,"**A plagiarism detector searches for copied 1000-character passages in 10GB corpus using Rabin-Karp with rolling hash. Hash function: simple sum of character ASCII values modulo 10^9. Average case O(n+m) but degrades. What causes worst case O(nm)?**","Rabin-Karp uses rolling hash for O(1) window update. With good hash, collisions rare, O(n+m) average. Poor hash causes many collisions - each collision requires O(m) character-by-character verification. Simple sum hash is terrible: 'abc' and 'bac' and 'cab' all hash identically (order-independent). For 1000-char strings, millions of anagrams produce same hash, causing O(nm) worst case. Need polynomial rolling hash: hash = (c₁×p⁰ + c₂×p¹ + ... + cₘ×p^(m-1)) mod M where p is prime. This is order-dependent and distributes well. Lesson: hash quality determines practical performance.",1,published,hard,analyze,blank,dsa,blank,blank,blank,Rolling hash guarantees O(n+m),"Poor hash function causes frequent collisions requiring O(m) verification; simple sum is order-independent",Collision probability doesn't affect complexity,Hash collisions only affect space,2
+Stack vs Queue for Tree Traversal,"**A code profiler analyzes function call trees. DFS using explicit stack discovers max depth. BFS using queue finds functions at specific call levels. For tree with 1M nodes, height 1000, which uses less space?**","DFS with stack: maximum depth simultaneous storage = height = 1000 nodes. O(h) space. BFS with queue: maximum width simultaneous storage ≈ last level node count. For skewed tree (height 1000), only 1 node per level, BFS also O(h). For balanced tree height h, BFS stores O(2^h) leaf nodes ≈ n/2. With 1M nodes: if balanced (h≈20), BFS stores ~500K nodes; if skewed (h=1000), BFS stores ~1 node. Question states height 1000, suggesting skewed tree - both O(1000) space. However, real function call trees often balanced, making DFS O(h) significantly better than BFS O(n/2). Space complexity depends critically on tree shape.",1,published,hard,analyze,blank,dsa,blank,blank,blank,"Both use O(n) space equally","DFS O(h)=O(1000) for this skewed tree; for balanced tree, DFS O(log n) vs BFS O(n/2)",BFS always more space efficient,Queue operations are faster,2
+Stable Partition in QuickSort,"**A modified QuickSort maintains stability by using auxiliary array for partitioning instead of in-place swaps:**
+
+```python
+def stable_partition(arr, low, high):
+    pivot = arr[high]
+    left_partition = []
+    right_partition = []
+    
+    for i in range(low, high):
+        if arr[i] <= pivot:
+            left_partition.append(arr[i])
+        else:
+            right_partition.append(arr[i])
+    
+    # Reconstruct array
+    k = low
+    for val in left_partition:
+        arr[k] = val
+        k += 1
+    arr[k] = pivot
+    k += 1
+    for val in right_partition:
+        arr[k] = val
+        k += 1
+    
+    return low + len(left_partition)
+```
+
+**What is the space complexity trade-off?**","Standard QuickSort: O(log n) recursion stack, in-place partitioning O(1) per level = O(log n) total space. Stable version: each partition level creates O(n) auxiliary arrays for left/right partitions. Total space O(n) for auxiliary arrays at deepest recursion level. Trade-off: gained stability, lost space efficiency. Stable sorts typically need O(n) space (MergeSort) or O(n²) time (Insertion Sort for merging). No stable O(n log n) time, O(log n) space comparison sort exists - fundamental trade-off.",1,published,hard,analyze,blank,dsa,blank,blank,blank,Still O(log n) space,"O(n) space for auxiliary arrays per recursion level; stability costs space efficiency",O(1) with clever implementation,Only affects time not space,2
+Hashing vs BST for Range Queries,"**A database indexes user ages (0-120). Two proposals: (1) Hash table with O(1) insert/search, (2) Balanced BST with O(log n) insert/search. Must support query: 'find all users aged 25-35'. Which structure is better and why?**","Hash table excels at exact match O(1) but fails at range queries - must check all buckets O(n). BST supports range queries efficiently: find start of range O(log n), then in-order traversal yields sorted results in O(log n + k) where k=results. For single lookups, hash table faster. For range queries, BST essential. Real systems: use both - hash index for exact match, B-tree index for ranges. This is fundamental difference between HashMap (unordered) and TreeMap (ordered) in Java. Many developers over-use hash tables without considering query patterns.",1,published,medium,analyze,blank,dsa,blank,blank,blank,Hash table better for all query types,"BST supports O(log n + k) range queries via in-order traversal; hash table requires O(n) scan for ranges",Both equally efficient for ranges,Hash table can be modified for ranges,2
+```
+
+## Instructions to Save:
+1. **Copy all the text** from the code block above (starting with `title,description...`)
+2. **Open a new file** in VS Code (`Ctrl+N` or `Cmd+N`)
+3. **Paste** the content
+4. **Save as** `dsa_best_mixed_next_10.csv` (`Ctrl+S` or `Cmd+S`)
+
+Your CSV with 10 MORE best handpicked MCQs is ready! 🎯
