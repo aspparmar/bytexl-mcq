@@ -1,0 +1,132 @@
+# Binary Search Tree - DSA Assessment (CSV Format)
+
+Below is your CSV data with 30 high-quality Binary Search Tree MCQs. **Copy everything from the code block below** and save it as a `.csv` file:
+
+```csv
+title,description,explanation,score,status,difficulty,bloomTaxonomy,tags,subjects,topics,subTopics,companies,option1,option2,option3,option4,answer
+BST Insertion Order Dependency,"**Three developers insert [5,3,7] into empty BST. Dev1: 5→3→7. Dev2: 3→5→7. Dev3: 7→5→3. All produce valid BSTs. Which statement about resulting tree structures is correct?**","Each insertion order produces different tree structure. Dev1: 5 root, 3 left, 7 right (balanced, height 1). Dev2: 3 root, 5 right, 7 right-right (right-skewed, height 2). Dev3: 7 root, 5 left, 3 left-left (left-skewed, height 2). Same elements, different structures. This is fundamental BST property: structure depends on insertion order, unlike heap which has canonical structure.",1,published,medium,understand,blank,dsa,blank,blank,blank,All three create identical tree structures,Structures differ but all maintain BST property,Only Dev1 creates valid BST,Requires balancing rotations to be valid,2
+Delete Node With Two Children,"**Deleting node 50 with two children from BST. Two strategies: (1) replace with in-order predecessor (largest in left subtree), (2) replace with in-order successor (smallest in right subtree). For tree with 1M nodes, which strategy affects tree balance?**","Both strategies maintain BST property as predecessor < 50 < successor. Neither guarantees balance - deleted node replaced by leaf/node from subtree, potentially increasing height locally. For self-balancing trees (AVL/RB), additional rotations needed after replacement. Choice between predecessor/successor can be randomized to avoid systematic skew. Standard BST: either works, no balance guarantee.",1,published,hard,analyze,blank,dsa,blank,blank,blank,In-order predecessor maintains balance better,Neither strategy guarantees balance in standard BST,In-order successor required for correctness,Predecessor required for trees over 100K nodes,2
+BST Range Query Optimization,"**E-commerce site filters products by price $100-$500. Products stored in BST by price. Simple approach: in-order traversal collecting matches - O(n). What optimization reduces unnecessary subtree visits?**
+
+```python
+def range_query(root, low, high, result):
+    if not root:
+        return
+    
+    # What pruning logic goes here?
+    if _______________:
+        range_query(root.left, low, high, result)
+    
+    if low <= root.val <= high:
+        result.append(root.val)
+    
+    if _______________:
+        range_query(root.right, low, high, result)
+```
+
+**What are the pruning conditions?**","Pruning: don't visit left subtree if root.val < low (all left values < low). Don't visit right subtree if root.val > high (all right values > high). Blanks: 'root.val > low' and 'root.val < high'. This reduces to O(h + k) where h=height, k=results, avoiding full O(n) traversal. BST ordering enables smart pruning unlike hash table requiring O(n) scan.",1,published,hard,apply,blank,dsa,blank,blank,blank,"Always traverse both subtrees, no pruning possible","Prune left if root.val < low, right if root.val > high",Visit left only if root in range,Requires preprocessing for optimization,2
+BST vs AVL Insertion Performance,"**System inserts 1M sorted integers into empty tree. Standard BST creates right-skewed tree with O(n) height, making insertions O(n²) total. AVL tree performs rotations maintaining O(log n) height. What is the rotation count for AVL with 1M sorted insertions?**","AVL tree with sorted input: each insertion triggers rotations. For n sorted elements, approximately n rotations total (each insertion needs ~1 rotation). 1M insertions ≈ 1M rotations. Despite rotations, AVL maintains O(n log n) total insertion time vs BST's O(n²). Each rotation is O(1), so rotation overhead is O(n). Trade-off: consistent performance for additional constant-factor work.",1,published,hard,analyze,blank,dsa,blank,blank,blank,No rotations needed for sorted data,Approximately 1M rotations maintaining balance,O(log n) rotations total,Rotations don't affect performance,2
+Find Kth Smallest Without Augmentation,"**BST with 100K nodes needs kth smallest element. In-order traversal until kth element: O(h + k) time. For k=99,999 (nearly largest), this is expensive. Can we improve without augmenting nodes with subtree sizes?**","Without augmentation, in-order traversal is optimal O(h + k). Finding kth smallest requires visiting k nodes in sorted order. BST structure doesn't help skip to kth directly. Augmentation (storing subtree size at each node) enables O(h) direct navigation. Trade-off: O(n) space for sizes, O(h) insertion updates vs O(h + k) queries without augmentation.",1,published,medium,analyze,blank,dsa,blank,blank,blank,Reverse in-order for kth smallest improves to O(h),No improvement without augmentation; need subtree sizes for O(h),Binary search on values achieves O(log k),Requires rebuilding tree,2
+BST Floor and Ceiling,"**Dictionary lookup finds floor (largest ≤ target) and ceiling (smallest ≥ target). For target 23 in BST [5,10,15,20,25,30], floor=20, ceiling=25. What's the algorithmic pattern?**","Floor: track last node where value ≤ target, go right if current < target (might find larger floor), left if current > target. Ceiling: track last node where value ≥ target, go left if current > target (might find smaller ceiling), right if current < target. Both O(h) single pass. Wrong to do in-order traversal O(n).",1,published,medium,apply,blank,dsa,blank,blank,blank,Requires in-order traversal O(n),Single pass tracking candidate while navigating O(h),Binary search after array conversion,Two separate BST traversals needed,2
+BST Successor Without Parent Pointer,"**Finding in-order successor of node N in BST without parent pointers. Two cases: (1) N has right child: successor is leftmost in right subtree. (2) N has no right child: successor is where? Without parent pointers, how to find?**","Case 1: leftmost node in right subtree - keep going left from N.right until NULL. Case 2 without parent: cannot determine successor without parent pointers or additional traversal. Need to traverse from root finding N, tracking last ancestor where N is in left subtree. Requires O(h) traversal from root. With parent pointers, O(h) upward walk.",1,published,hard,understand,blank,dsa,blank,blank,blank,Successor is always root,Cannot find efficiently without parent pointers; need root traversal,Rightmost node in left subtree,Use level-order traversal from N,2
+BST Mode Value,"**BST contains duplicate values: [5,3,3,7,7,7,9]. Finding mode (most frequent value) requires counting occurrences. In-order traversal counts consecutive duplicates. Why does this work efficiently in BST?**","In-order traversal visits BST in sorted order. Duplicates appear consecutively, enabling O(1) counter increment. Track current value count, update mode when count exceeds max. Single pass O(n). In unsorted structure, need hash map O(n) space. BST's sorted property enables O(1) space counting during traversal.",1,published,medium,understand,blank,dsa,blank,blank,blank,Requires hash map even for BST,In-order visits duplicates consecutively enabling O(1) space counting,Must sort first then count,Preorder traversal required,2
+Two Sum in BST,"**BST contains unique values. Finding two nodes summing to target T. Approach 1: in-order traversal to array, two-pointer O(n) time O(n) space. Approach 2: for each node, search for T-node.val in BST, O(n×h) time O(h) space. Can we achieve O(n) time O(h) space?**","Two-pointer approach using in-order and reverse in-order iterators simultaneously. Left iterator advances forward (smallest to largest), right iterator backward (largest to smallest). If sum < T, advance left; if sum > T, advance right. No array needed, O(h) space for two stacks. Visits each node at most once, O(n) time.",1,published,hard,apply,blank,dsa,blank,blank,blank,Not possible without O(n) space,Two iterators (forward and reverse in-order) achieve O(n) time O(h) space,Requires converting to array first,Hash set needed for O(n),2
+BST Construction From Preorder,"**Reconstructing BST from preorder [8,5,1,7,10,12]. First element 8 is root. Next element 5 < 8 goes left. But how to determine where left subtree ends and right subtree begins without in-order?**
+
+```python
+def build_bst_preorder(preorder, min_val, max_val, index):
+    if index[0] >= len(preorder):
+        return None
+    
+    val = preorder[index[0]]
+    
+    # When does value not belong to current subtree?
+    if val < min_val or val > max_val:
+        return None
+    
+    index[0] += 1
+    root = TreeNode(val)
+    
+    root.left = build_bst_preorder(preorder, min_val, val, index)
+    root.right = build_bst_preorder(preorder, val, max_val, index)
+    
+    return root
+```
+
+**How does this avoid needing in-order traversal?**","BST property: left subtree values in range (min, root.val), right subtree in range (root.val, max). Process preorder sequentially, using range constraints to determine subtree membership. When value outside range, backtrack. Each value processed once, O(n) time O(h) space. Unlike general binary tree needing two traversals, BST's ordering property enables single-traversal reconstruction.",1,published,hard,understand,blank,dsa,blank,blank,blank,Must have in-order for reconstruction,Range constraints from BST property enable single-traversal reconstruction,Requires level-order also,Only works for balanced BSTs,2
+BST Median Calculation,"**Live data stream maintains median using two heaps. Alternative: maintain BST with subtree size augmentation. For 1M elements, comparing approaches for insertion and median query complexities.**","Two heaps: insert O(log n), median O(1). Augmented BST: insert O(log n) including size updates, median O(h) navigating to middle element. For balanced tree, both have similar insertion. Heaps give O(1) median, BST gives O(log n). However, BST supports other queries (k-th element, range) that heaps cannot. Choice depends on required operations.",1,published,hard,analyze,blank,dsa,blank,blank,blank,BST always better for median,Two heaps give O(1) median vs BST O(log n); BST enables other queries,BST requires O(n) for median,Both approaches identical,2
+BST Conversion To Sorted Doubly Linked List,"**Converting BST to sorted circular doubly linked list in-place (reusing tree nodes). Left pointer becomes prev, right pointer becomes next. What traversal order enables this efficiently?**","In-order traversal visits nodes in sorted order. Maintain pointer to previously visited node. For current node: prev.right = current (link forward), current.left = prev (link backward), update prev = current. After traversal, connect head and tail for circular list. O(n) time, O(h) space for recursion. Preorder/postorder don't give sorted order.",1,published,medium,apply,blank,dsa,blank,blank,blank,Requires extra space for conversion,In-order traversal linking prev/next pointers during visit,Preorder with backtracking,Level-order from root,2
+BST Trim To Range,"**Trimming BST to range [L, R], removing nodes outside range. Node 15 in tree [5,10,15,20,25] with range [8,18]. What happens to node 15's subtrees during trimming?**
+
+```python
+def trim_bst(root, L, R):
+    if not root:
+        return None
+    
+    if root.val < L:
+        return trim_bst(root.right, L, R)  # Left subtree all < L
+    
+    if root.val > R:
+        return trim_bst(root.left, L, R)   # Right subtree all > R
+    
+    # root.val in range
+    root.left = trim_bst(root.left, L, R)
+    root.right = trim_bst(root.right, L, R)
+    return root
+```
+
+**Why can entire subtrees be pruned?**","BST property: if node.val < L, entire left subtree < L (prune all). If node.val > R, entire right subtree > R (prune all). If node in range, recursively trim both subtrees. Node 15 in range [8,18]: keep 15, trim both subtrees. Subtree nodes in range remain, others pruned. Time O(n) worst case, but pruning reduces practical visits.",1,published,medium,understand,blank,dsa,blank,blank,blank,Must check each subtree node individually,BST ordering allows pruning entire subtrees based on root value,Only leaf nodes can be pruned,Requires rebuilding tree,2
+BST From Sorted Array Uniqueness,"**Creating balanced BST from sorted array [1,2,3,4,5,6,7]. Developer claims middle element must be root for balance. Is there only one valid balanced BST structure for this array?**","Multiple balanced structures exist. Middle element (4) as root gives one structure. But [1,2,3] left subtree could have 2 as root (balanced) or 1/3 (slightly unbalanced but valid). Each subtree middle-element choice creates different structure. All maintain balance property (|left_height - right_height| ≤ 1 at all nodes). Median as root guarantees optimal balance.",1,published,medium,analyze,blank,dsa,blank,blank,blank,Only one valid structure exists,Multiple balanced structures possible with different subtree root choices,Must always use leftmost element,Requires AVL rotations for uniqueness,2
+BST Lowest Common Ancestor Optimization,"**Finding LCA of nodes P=3 and Q=9 in BST. General binary tree requires O(n) path comparison. BST allows optimization using value comparisons. For BST root 6, how to determine LCA?**","BST optimization: if both P and Q < root, LCA in left subtree. If both > root, LCA in right subtree. If P < root < Q (or vice versa), root is LCA. Single path from root O(h), no path storage needed. For P=3, Q=9, root=6: 3 < 6 < 9, so 6 is LCA. Works because BST ordering provides directional information.",1,published,easy,apply,blank,dsa,blank,blank,blank,Requires path storage for both nodes,Value comparisons guide search in single O(h) path,Must use parent pointers,Both subtrees must be searched,2
+Balanced BST Definition Confusion,"**Developer claims BST [10,5,15,None,7] is balanced because |left_subtree_size - right_subtree_size| ≤ 1. Tester inserts values creating [10,5,15,None,7,None,20,None,None,None,None,6,8]. Height now 4. What's the misunderstanding?**","Balanced means |height(left) - height(right)| ≤ 1 at EVERY node, not size difference. AVL tree checks height balance at all nodes. After insertions, node 5 has left subtree (None) height 0, right subtree (7→6,8) height 2. |0-2| = 2 > 1, violates balance. Size balance doesn't guarantee height balance. Height determines operation complexity, not size.",1,published,medium,understand,blank,dsa,blank,blank,blank,Developer definition is correct,Height balance required at all nodes; size balance insufficient,Only root balance matters,Tree is still balanced,2
+BST Morris Traversal For In-Order,"**Memory-constrained system needs in-order traversal without recursion stack or auxiliary space. Morris traversal uses threaded tree temporarily. For BST with 500K nodes, what's the threading overhead?**","Morris creates threads: rightmost node of left subtree points to current node. Visit current, follow thread back, remove thread, continue. Each node visited twice (once to create thread, once to remove), O(n) time with larger constant. No extra space O(1). For 500K nodes: 1M node visits total. Trade-off: time constant for O(1) space. Recursion uses O(h) space.",1,published,hard,analyze,blank,dsa,blank,blank,blank,Threading is O(n²) operation,Each node visited twice for O(n) time with O(1) space,Requires O(log n) space for threads,Only works for balanced BSTs,2
+Convert Sorted List To BST,"**Converting sorted linked list to balanced BST. Array version uses middle element O(1) access. Linked list requires O(n) traversal to find middle. Naive recursive approach is O(n log n). What optimization achieves O(n)?**
+
+```python
+def sorted_list_to_bst(head):
+    # Count nodes O(n)
+    length = count_nodes(head)
+    
+    def convert(start, end):
+        nonlocal head
+        if start > end:
+            return None
+        
+        mid = (start + end) // 2
+        
+        # Build left subtree first (processes elements in order)
+        left = convert(start, mid - 1)
+        
+        # Current head is the root
+        root = TreeNode(head.val)
+        head = head.next
+        
+        # Build right subtree
+        right = convert(mid + 1, end)
+        
+        root.left = left
+        root.right = right
+        return root
+    
+    return convert(0, length - 1)
+```
+
+**How does this achieve O(n)?**","Simulate in-order traversal while building tree. Build left subtree (processes elements in sorted order), create root from current list node, advance pointer, build right subtree. Each node visited once following sorted order. O(n) time. Array middle-element approach easier but this optimizes linked list's sequential nature. Clever use of recursion depth as implicit position tracking.",1,published,hard,understand,blank,dsa,blank,blank,blank,Must convert list to array first,In-order construction visiting each node once achieves O(n),Requires random access optimization,Cannot achieve better than O(n log n),2
+BST Identical Structure Check,"**Checking if two BSTs have identical structure and values. Recursive approach compares nodes. For trees with 1M nodes each, what's the minimum comparison count in best case?**","Best case: trees differ at root, one comparison determines inequality, return false. Worst case: trees identical, all n nodes compared. Average case: difference found partway, expected O(n/2) comparisons. Cannot do better than checking root in best case. Cannot determine identical without checking all nodes in worst case. Early termination optimization for best/average.",1,published,medium,analyze,blank,dsa,blank,blank,blank,Always requires n comparisons,Best case: 1 comparison if roots differ; worst case: n comparisons if identical,O(log n) comparisons sufficient,Requires hashing optimization,2
+BST Insert vs Binary Heap Insert,"**Comparing BST and Binary Heap insertion. Both support insert and extract-min/max. For 1M random insertions followed by 1M extractions, which structure performs better?**","BST: insert O(h) average O(log n), extract-min requires finding leftmost O(h). Unbalanced BST degrades to O(n). Heap: insert O(log n), extract-min O(log n), both guaranteed. Heap better for priority queue (frequent extract-min). BST better if need range queries or sorted iteration. For random data, expected BST height O(log n), but worst-case risk exists.",1,published,hard,analyze,blank,dsa,blank,blank,blank,BST always performs better,Heap guarantees O(log n); BST averages O(log n) but risks O(n) unbalanced,Both perform identically,BST requires balancing for equivalence,2
+Inorder Predecessor BST,"**Finding in-order predecessor (previous node in sorted order) of node N with value V in BST. N has left child: predecessor is rightmost in left subtree. N has no left child: predecessor is where?**","With left child: rightmost node in left subtree (go left once, then right until NULL). Without left child: predecessor is ancestor where N is in right subtree. Traverse from root tracking last ancestor where we went right. O(h) from root. Alternatively, with parent pointers: go up until coming from right child. This is reverse of successor logic.",1,published,medium,understand,blank,dsa,blank,blank,blank,Leftmost node in right subtree,Ancestor where N is in right subtree (last right-turn ancestor),Always the parent node,No predecessor exists,2
+BST Recovery After Swap,"**Two nodes in BST were accidentally swapped. Tree: [3,1,4,None,None,2] (2 and 4 swapped). In-order gives [1,2,3,4] expected but produces [1,4,3,2]. How to identify and fix the swapped nodes?**","In-order traversal should give sorted sequence. Find two violations where prev > current. First violation: prev is first swapped node. Second violation: current is second swapped node. If only one violation, adjacent nodes swapped. For [1,4,3,2]: violations at (4,3) and (3,2). First=4, second=2. Swap values back. O(n) time, O(h) space.",1,published,hard,apply,blank,dsa,blank,blank,blank,Requires rebuilding entire tree,In-order finds two violations identifying swapped nodes for O(n) fix,Preorder traversal required,Cannot fix without reconstruction,2
+BST Sum Tree Conversion,"**Converting BST to sum tree where each node's value becomes sum of all nodes greater than or equal to itself. Original: [5,3,7,2,4,6,8]. What traversal order enables this efficiently?**","Reverse in-order (right, root, left) visits nodes in descending order. Maintain running sum starting from 0. At each node: add current value to sum, update node to sum. Visits largest to smallest, each node gets sum of itself + all larger. Example: visit 8 (sum=8), visit 7 (sum=15, node=15), visit 6 (sum=21, node=21), etc. O(n) time, O(h) space.",1,published,medium,apply,blank,dsa,blank,blank,blank,Regular in-order traversal,Reverse in-order accumulating sum from largest to smallest,Level-order with backtracking,Requires two passes,2
+BST Merge Two Trees,"**Merging two balanced BSTs with n and m nodes respectively. Naive approach: insert all elements from second BST into first - O(m × log n). What optimization achieves O(m+n)?**","In-order traversal of both trees gives two sorted arrays. Merge sorted arrays O(m+n). Build balanced BST from merged array O(m+n) using middle-element recursion. Total O(m+n). Alternative: convert both to sorted lists O(m+n), merge lists O(m+n), build BST O(m+n). Avoids repeated insertions. Requires O(m+n) space for merged sequence.",1,published,hard,analyze,blank,dsa,blank,blank,blank,Insertion approach is optimal,Convert to sorted arrays, merge O(m+n), build balanced BST,Requires complex tree rotations,Cannot achieve better than O(m×log n),2
+BST Closest Value,"**Finding value in BST closest to target (not necessarily in tree). Target 3.7 in BST [4,2,5,1,3]. Closest is 4 (distance 0.3). What's the search strategy?**","Binary search-like traversal maintaining closest seen. At each node: update closest if current node closer than previous closest. If target < node.val, go left (might find closer). If target > node.val, go right. Continue until NULL. O(h) time, O(1) space. Unlike exact search, don't stop at match - must continue to check if better exists.",1,published,easy,apply,blank,dsa,blank,blank,blank,Requires complete traversal O(n),Search path to target updating closest achieves O(h),In-order traversal required,Binary search on array after conversion,2
+BST With Duplicates Handling,"**BST traditionally stores unique values. System requires storing duplicates (e.g., multiple users with same age). Three strategies: (1) allow right subtree for equal values, (2) use count field, (3) maintain list at each node. For 1M entries with many duplicates, which is optimal?**","Strategy 1 (equal→right): simple but creates skew if many duplicates. Strategy 2 (count): space-efficient, O(1) space per unique value. Best for many duplicates. In-order traversal needs to emit count times. Strategy 3 (list): flexible but O(k) space per node where k=duplicates. Count field optimal for high duplicate rates, maintains tree structure, simplifies implementation.",1,published,medium,analyze,blank,dsa,blank,blank,blank,Lists at each node always best,Count field optimal for high duplication with O(1) space per unique value,Equal values must go left,Duplicates impossible in BST,2
+BST Inorder Successor With Parent,"**Node N has parent pointer in BST. Finding in-order successor. Two cases: (1) N has right child: successor is leftmost in right subtree. (2) N has no right child but has parent: successor is?**","Case 2: go up via parent until finding ancestor where N is in left subtree. First such ancestor is successor. If reach root and N is in right subtree of root, N is largest node (no successor). Parent pointers enable O(h) upward walk. Without parent, need O(h) traversal from root. Example: N=4 with right child: successor=5 (leftmost right). N=5 no right child: successor=6 (parent where 5 is left child).",1,published,medium,understand,blank,dsa,blank,blank,blank,Always the parent node,First ancestor where N is in left subtree (go up until coming from left),Root of tree,Rightmost node in left subtree,2
+```
+
+## Instructions to Save:
+1. **Copy all the text** from the code block above (starting with `title,description...`)
+2. **Open a new file** in VS Code (`Ctrl+N` or `Cmd+N`)
+3. **Paste** the content
+4. **Save as** `binary_search_tree_30.csv` (`Ctrl+S` or `Cmd+S`)
+
+Your CSV with 30 high-quality Binary Search Tree MCQs is ready! 🎯
