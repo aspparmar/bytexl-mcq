@@ -1,0 +1,189 @@
+
+
+```csv
+title,description,explanation,score,status,difficulty,bloomTaxonomy,tags,subjects,topics,subTopics,companies,option1,option2,option3,option4,answer
+Trie vs Hash Table Prefix Search,"**Autocomplete system stores 10M search queries. User types 'face' (4 chars). Hash table: O(1) exact match but O(n) scanning all 10M queries to find prefixes. Trie: what's the complexity for finding all completions?**","Trie prefix search: O(p+k) where p=prefix length (4), k=number of matching results. Traverse prefix path O(4), then DFS/BFS to collect matches O(k). Independent of total entries (10M). Hash table must scan all entries checking if each starts with 'face': O(n) where n=10M. Trie's key advantage: prefix operations. Trade-off: Trie uses more space (ALPHABET_SIZE pointers per node).",1,published,hard,analyze,blank,dsa,blank,blank,blank,Both require O(n) prefix search,Trie achieves O(p+k) for prefix length p and k results; hash needs O(n) scan,Hash table faster for prefix search,Requires sorted array for efficiency,2
+Trie Space Complexity,"**Dictionary stores 100K English words (avg length 6 chars, alphabet size 26). Worst case: each character needs new node. Best case: all words share common prefixes. What determines actual space complexity?**","Space: O(ALPHABET_SIZE × N × L) where N=words, L=avg length. With 26-letter alphabet, 100K words, length 6: worst case ~15.6M pointers (26×100K×6). Common prefixes reduce space significantly. Example: 'cat', 'car', 'card' share 'ca' prefix (reuse nodes). Real dictionaries have prefix overlap ~30-50% reduction. Array implementation: each node stores 26 pointers. Optimization: hashmap per node reduces space for sparse branches.",1,published,hard,understand,blank,dsa,blank,blank,blank,O(N) space for N words,O(ALPHABET_SIZE × N × L) with shared prefixes reducing actual usage,O(N log N) for balanced structure,O(L) space for longest word,2
+Trie Insertion Time Complexity,"**Inserting word 'algorithm' (9 chars) into trie. Each character needs: check if child exists, create if needed. What's the time complexity and why doesn't it depend on existing word count?**","Insertion: traverse/create nodes for each character in word. Time O(L) where L=word length (9). Independent of existing words in trie because path determined solely by word's characters, not other words. Unlike BST where insertion is O(log n) dependent on tree size. Trie property: insertion cost based on word length, not dictionary size. Each character: O(1) child lookup (array) or O(log ALPHABET_SIZE) (BST per node).",1,published,medium,understand,blank,dsa,blank,blank,blank,O(log n) dependent on trie size,O(L) for word length independent of dictionary size,O(n) comparing with all words,O(L log n) with balancing,2
+Delete Word With Shared Prefix,"**Trie contains 'cat', 'cats', 'car'. Deleting 'cats' must not affect 'cat'. What's the deletion strategy to avoid breaking shared prefixes?**
+
+```python
+def delete(node, word, depth):
+    if depth == len(word):
+        node.is_end_of_word = False
+        return node.has_no_children()  # Delete node if no children
+    
+    char = word[depth]
+    if char in node.children:
+        should_delete = delete(node.children[char], word, depth + 1)
+        if should_delete:
+            del node.children[char]
+            return not node.is_end_of_word and node.has_no_children()
+    
+    return False
+```
+
+**Why check for children and end markers?**","Mark end node as non-terminal (is_end_of_word=False). Recursively delete nodes bottom-up only if: (1) node has no children, (2) node is not end of another word. For 'cats': mark 's' as non-terminal, delete 's' if no children, keep 'cat' nodes. This preserves shared prefix 'cat'. Bottom-up deletion ensures parent nodes deleted only when safe.",1,published,hard,apply,blank,dsa,blank,blank,blank,Always delete all nodes of word,Mark end marker False; delete nodes bottom-up only if no children and not terminal,Delete entire branch from root,Requires rebuilding trie,2
+Longest Common Prefix,"**Finding longest common prefix of strings: ['flower', 'flow', 'flight']. Trie approach: insert all, traverse from root until branch/end. What's the result and time complexity?**","Insert all words: O(N×L) where N=3 words, L=avg length. Find LCP: traverse from root while: (1) exactly one child exists, (2) not at word end. For ['flower', 'flow', 'flight']: path f→l, then branches (o vs i). LCP='fl'. Time O(N×L) insertion + O(min_length) traversal. Alternative: sort and compare first/last O(N log N + L). Trie approach useful when LCP queries frequent.",1,published,medium,apply,blank,dsa,blank,blank,blank,'flo' is longest common prefix,'fl' is longest common prefix by traversing until branch,Requires comparing all pairs,No common prefix exists,2
+Count Words With Prefix,"**Word frequency counter tracks how many words start with prefix 'pre'. Words: 'prefix', 'prepare', 'present', 'preview', 'apple'. Trie stores count at each node. What's the query complexity?**
+
+```python
+class TrieNode:
+    def __init__(self):
+        self.children = {}
+        self.prefix_count = 0  # Words passing through this node
+        self.is_end = False
+    
+def count_prefix(root, prefix):
+    node = root
+    for char in prefix:
+        if char not in node.children:
+            return 0
+        node = node.children[char]
+    return node.prefix_count
+```
+
+**Why store prefix count during insertion?**","During insertion, increment prefix_count for each node on path. Query: traverse prefix path O(p), return prefix_count at last node O(1). Total O(p). For prefix 'pre': traverse p→r→e, return count=4 (prefix, prepare, present, preview). Without count: must DFS entire subtree O(k) where k=matching words. Storing count trades space (1 integer per node) for O(1) query after traversal.",1,published,medium,understand,blank,dsa,blank,blank,blank,Requires traversing entire subtree O(k),Traverse prefix path O(p) and return stored count,Must enumerate all words,Binary search on sorted list,2
+Lexicographic Ordering,"**Dictionary words stored in trie: 'cat', 'car', 'card', 'dog'. In-order traversal visits nodes alphabetically. What's the traversal sequence?**","Trie naturally maintains lexicographic order. DFS traversal visiting children in sorted order produces alphabetically sorted output. From root: visit 'c' branch (car, card, cat), then 'd' branch (dog). Sequence: 'car'→'card'→'cat'→'dog'. This property enables: (1) sorted iteration O(N×L), (2) range queries, (3) finding next/previous word. Unlike hash table which has no order.",1,published,easy,understand,blank,dsa,blank,blank,blank,"'cat'→'car'→'card'→'dog'","'car'→'card'→'cat'→'dog' following DFS in alphabet order",Requires separate sorting,Traversal order unpredictable,2
+Replace Words With Root,"**Text: 'the cattle was rattled by the battery'. Dictionary roots: ['cat', 'bat', 'rat']. Replace words with shortest root: 'the cat was rat by the bat'. How does trie find shortest matching root?**
+
+```python
+def replace_words(roots, sentence):
+    trie = build_trie(roots)
+    words = sentence.split()
+    
+    for i, word in enumerate(words):
+        node = trie.root
+        prefix = []
+        for char in word:
+            if char not in node.children:
+                break
+            node = node.children[char]
+            prefix.append(char)
+            if node.is_end:  # Found root, stop early
+                words[i] = ''.join(prefix)
+                break
+    
+    return ' '.join(words)
+```
+
+**Why stop at first end marker encountered?**","For 'cattle': traverse c→a→t, find 'cat' is root (end marker), stop. Don't continue to 'cattl'. Shortest root replacement rule. Without early stopping, might find longer but non-minimal root. Time O(R) for R roots insertion + O(W×L) for W words checking. Trie enables prefix-based replacement efficiently.",1,published,medium,apply,blank,dsa,blank,blank,blank,Must check all possible roots,Stop at first end marker for shortest root match,Continue to word end always,Requires sorting roots,2
+Word Search II In Grid,"**2D grid word search: find all dictionary words. Grid 4×4, dictionary 10K words. Backtracking from each cell: O(16 × 4^(max_word_length) × 10K) checks. How does trie optimize?**","Build trie from dictionary O(total_chars). DFS from each cell, pruning paths not in trie. At each cell: check if current path forms trie prefix. If not, backtrack (no words possible). If end marker, found word. Time O(cells × 4^max_depth) but massive pruning. Without trie: check each word separately. Trie prunes impossible paths early: single DFS finds all words simultaneously. Used in: Boggle solver, word games.",1,published,hard,analyze,blank,dsa,blank,blank,blank,Trie makes no difference in complexity,Trie prunes invalid paths early; single DFS finds all words with prefix matching,Hash table more efficient,Requires preprocessing grid,2
+IP Routing Prefix Match,"**Router has forwarding table with IP prefixes: 192.168.0.0/16, 192.168.1.0/24, 10.0.0.0/8. Packet to 192.168.1.50 should match longest prefix. How does binary trie (0/1 bits) find longest matching prefix?**","Build trie with IP bits. For 192.168.1.50: binary 11000000.10101000.00000001.00110010. Traverse trie bit by bit, tracking last prefix match (node with route entry). At end: return longest prefix found. For example: matches /16 at bit 16, matches /24 at bit 24 (longest). Return /24 route. Time O(32) for IPv4 (32 bits). Used in: IP routing, CIDR, network switches.",1,published,hard,apply,blank,dsa,blank,blank,blank,Hash table with exact IP matches,Binary trie with bit-by-bit traversal tracking longest prefix match,Linear search through all prefixes,Requires sorting by prefix length,2
+Compressed Trie Optimization,"**Standard trie for 'test', 'tester', 'testing': each character is node (many single-child chains). Compressed trie (radix tree/Patricia trie) stores edge labels. How does compression reduce space?**","Compressed trie: chains of single children merged into single edge with multi-char label. 'test'→'er' (one edge 'er'). 'test'→'ing' (one edge 'ing'). Standard: t→e→s→t→e→r (6 nodes). Compressed: 'test' (root to first branch), then 'er' and 'ing' edges (3 nodes). Space: O(N) nodes for N words vs O(total_chars) in standard. Search remains O(L) comparing edge labels. Used in: radix tree, PATRICIA, file systems.",1,published,hard,understand,blank,dsa,blank,blank,blank,Compression impossible for tries,Merge single-child chains into edges with multi-char labels reducing to O(N) nodes,Requires hashing for compression,Only works for numeric data,2
+Design Add and Search Word,"**Design data structure supporting: addWord('bad'), addWord('dad'), search('bad')→true, search('.ad')→true (. matches any char). How to handle wildcard search in trie?**
+
+```python
+def search(node, word, index):
+    if index == len(word):
+        return node.is_end
+    
+    char = word[index]
+    if char == '.':
+        # Try all children
+        for child in node.children.values():
+            if search(child, word, index + 1):
+                return True
+        return False
+    else:
+        if char not in node.children:
+            return False
+        return search(node.children[char], word, index + 1)
+```
+
+**What's the worst-case complexity with wildcards?**","Exact char: follow single path O(L). Wildcard '.': try all ALPHABET_SIZE branches. With k wildcards: O(ALPHABET_SIZE^k × L). Worst case '.....': O(26^5 × 5) for 5-char word. Exponential in wildcards. Without wildcards: O(L). This is fundamental limitation: wildcards require exploring multiple paths. Optimization: limit wildcard count, use suffix trees for better pattern matching.",1,published,hard,analyze,blank,dsa,blank,blank,blank,Still O(L) with wildcards,O(ALPHABET_SIZE^wildcards × L) exponential in wildcard count,O(N) checking all stored words,Wildcards impossible in trie,2
+Maximum XOR With Trie,"**Finding max XOR of two elements in array [3,10,5,25]. Binary trie stores numbers bit by bit. For number n, traverse trie taking opposite bit when possible (maximizes XOR). Why does this work?**
+
+```python
+def find_max_xor(nums):
+    trie = BinaryTrie()
+    max_xor = 0
+    
+    for num in nums:
+        trie.insert(num)
+        # For each bit, try to take opposite path
+        current_xor = trie.query_max_xor(num)
+        max_xor = max(max_xor, current_xor)
+    
+    return max_xor
+```
+
+**What's the time complexity for n numbers with b bits?**","XOR maximized when bits differ. For each bit position: if current num has 0, prefer path with 1 (XOR gives 1). Build trie with all numbers: O(n×b). Query each number: O(b) per query, n queries: O(n×b). Total O(n×b). For 32-bit integers, n=1000: O(32000) operations. Without trie: O(n²) checking all pairs. Trie reduces to O(n×b). Used in: maximum XOR problems, bit manipulation optimization.",1,published,hard,analyze,blank,dsa,blank,blank,blank,Greedy bit selection without trie works,O(n×b) inserting and querying each number for b bits,O(n² log n) with sorting,Requires dynamic programming,2
+Trie vs Suffix Tree,"**Spam filter checks if text contains blacklisted words. Trie stores blacklist: search each position in text O(text_length × max_word_length). Suffix tree stores all text suffixes. What's the trade-off?**","Trie (Aho-Corasick): build trie of patterns, scan text once with failure links. Time O(text_length + matches). Space O(pattern_total_chars). Suffix tree: build from text O(text_length), search each pattern O(pattern_length). Time O(text_length + pattern_total). Space O(text_length). For static patterns, dynamic text: trie better. For static text, dynamic patterns: suffix tree better. Aho-Corasick finds all pattern occurrences in single text pass.",1,published,hard,understand,blank,dsa,blank,blank,blank,Suffix tree always faster than trie,Trie better for static patterns; suffix tree for static text; complexity trade-offs differ,Both structures equivalent,Hash table more efficient,2
+Implement Trie Node Structure,"**Implementing trie node with alphabet size 26. Two approaches: (1) array[26] of child pointers, (2) hashmap of char→node. What's the space-time trade-off?**","Array: O(1) child access, O(ALPHABET_SIZE) space per node (26 pointers always allocated). For sparse tries (few children), wastes space. Hashmap: O(1) avg child access, O(actual_children) space per node. For dense nodes, hashmap overhead larger. Choice depends on: alphabet size (26 vs Unicode 100K+), branching factor (dense vs sparse). English text: array often better. Unicode: hashmap necessary.",1,published,medium,understand,blank,dsa,blank,blank,blank,Array always superior to hashmap,Array O(1) access with O(26) space; hashmap O(1) avg with O(children) space,Hashmap always uses less space,Linked list more efficient,2
+Case-Insensitive Trie,"**Autocomplete must handle case-insensitively: 'Apple', 'apple', 'APPLE' treated as same word. Two approaches: (1) convert to lowercase before insert/search, (2) store both cases at each node. What's the correct approach?**","Approach 1 (normalize): convert all input to lowercase before operations. Store 'apple' once. Consistent, simple, space-efficient. Original casing can be stored separately for display. Approach 2 (dual storage): store both 'a' and 'A' children, requires checking both during operations. Doubles space, complex traversal. Normalization is standard practice: preprocess input, keeping trie structure simple.",1,published,easy,apply,blank,dsa,blank,blank,blank,Store both cases at each node doubles space,Normalize to lowercase before insertion; simple and space-efficient,Case-sensitive matching required,Requires separate tries,2
+Word Break Problem With Trie,"**Checking if string 'leetcode' can be segmented using dictionary ['leet', 'code']. Trie optimization: at each position, use trie to find all valid words starting there. How does trie improve over hash set?**","Hash set: at each position, check all possible substrings as dictionary keys O(L²) for string length L. Trie: at each position, traverse trie character by character, finding all valid words in single pass O(L). For 'leetcode': position 0, traverse l→e→e→t (found 'leet'), continue to find all matches. DP with trie: O(L²) positions × O(L) trie lookup vs O(L³) with hash. Trie reduces substring checking overhead.",1,published,hard,analyze,blank,dsa,blank,blank,blank,Hash set always faster,Trie finds all valid word matches in O(L) per position vs O(L²) hash checks,Binary search more efficient,Requires backtracking only,2
+Stream of Characters,"**Real-time typing analyzer checks if last k characters form valid word. Stream: 'c','a','r','d','b','a','t'. After 'd', check if 'card' is word. After 't', check 'bat'. Build trie from dictionary, but how to handle stream efficiently?**
+
+```python
+class StreamChecker:
+    def __init__(self, words):
+        self.trie = build_trie([w[::-1] for w in words])  # Reverse words!
+        self.stream = []
+    
+    def query(self, letter):
+        self.stream.append(letter)
+        node = self.trie.root
+        for i in range(len(self.stream) - 1, -1, -1):  # Traverse backwards
+            char = self.stream[i]
+            if char not in node.children:
+                return False
+            node = node.children[char]
+            if node.is_end:
+                return True
+        return False
+```
+
+**Why reverse words when building trie?**","Stream grows forward, but we check suffix (last k chars). Reversing words in trie allows backward traversal from current position. When 't' arrives: check t→a→b (reversed 'bat'). Without reversal: must check multiple tries or store sliding window. Time: O(max_word_length) per query. Space: O(total_reversed_chars). Clever trick: reverse to match suffix checking pattern.",1,published,hard,apply,blank,dsa,blank,blank,blank,Forward trie with window buffer,Reverse words in trie to enable efficient backward suffix matching,Store all substrings in hash,Requires multiple tries,2
+Prefix Frequency Query,"**Analytics system tracks search query prefixes. After 1000 searches, query 'how many queries started with \"face\"?' Naive: scan all 1000 queries O(n). Trie with frequency count: what's the optimization?**","During insertion, maintain count at each node (words with this prefix). Query 'face': traverse f→a→c→e, return count at 'e' node. Time O(prefix_length) vs O(n) scan. Example: 'face'→100, 'facebook'→50, 'facetime'→30 all increment 'face' prefix count. For 10M queries, trie query still O(4) while scan is O(10M). Critical for analytics at scale.",1,published,medium,understand,blank,dsa,blank,blank,blank,Must scan all stored queries O(n),Maintain prefix count at nodes for O(prefix_length) query,Binary search after sorting,Requires external index,2
+Trie Serialization For Caching,"**Saving trie to disk for faster startup. Trie has 100K words. Serialization approaches: (1) DFS with node markers, (2) level-order with structure encoding. What's critical for deserialization?**","Must encode: (1) node→children mapping, (2) end-of-word markers, (3) structure to rebuild parent-child links. DFS: serialize node, mark children count, recursively serialize children. Deserialize: read node, read children count, recursively build children. Level-order: BFS with level separators. Both O(nodes) time/space. Critical: preserve tree structure exactly for correct word reconstruction. Used in: persistent dictionaries, cache warming.",1,published,medium,understand,blank,dsa,blank,blank,blank,Only end markers needed,Encode parent-child structure with end markers for exact reconstruction,Store words as list more efficient,Tries cannot be serialized,2
+Memory-Mapped Trie,"**Dictionary loaded from disk uses memory-mapped file. Trie nodes stored contiguously with fixed offsets. How does memory-mapping improve cold-start performance vs building trie in memory?**","Memory-mapping: OS loads pages on-demand, no full file read upfront. Trie structure persists on disk in traversable format. Cold-start: first query triggers page faults loading relevant nodes only. Building in-memory: parse entire dictionary, construct nodes O(total_chars), allocates memory. For 10M words: memory-mapped loads ~1% of data for first query vs 100% for in-memory build. Trade-off: mmap startup O(1) vs build O(n), but mmap slower per access (page faults).",1,published,hard,analyze,blank,dsa,blank,blank,blank,No performance difference,Memory-mapping loads pages on-demand O(1) startup vs O(n) construction,Building in-memory always faster,Requires database system,2
+Trie In Competitive Programming,"**Coding contest: find maximum XOR pair in array. Participant uses trie O(n log max_value) solution. Judge has O(n²) brute force. For n=100K, 32-bit numbers, what's the time difference?**","Brute force: check all pairs O(n²) = O(10¹⁰) operations (10 billion). Trie: insert all O(n×32), query each O(n×32) = O(6.4M) operations. Speedup: ~1500x. For contest time limits (1-2 sec), brute force times out, trie passes. This demonstrates importance of data structure choice. Similar pattern: many problems reduce from O(n²) to O(n log n) or O(n×constant) with tries.",1,published,medium,analyze,blank,dsa,blank,blank,blank,Both solutions have same practical runtime,Trie O(n×bits) vs brute O(n²); ~1500x speedup for n=100K,Brute force faster for small n,Trie requires more memory,2
+Trie For Phone Directory,"**Phone contact list: 'Alice'→'123', 'Bob'→'456'. Search by name prefix: trie of names. But also search by number prefix: need reverse trie? For 10K contacts, what's the space requirement?**","Need two tries: name→contact and number→contact. Each trie stores 10K entries. Space: ~2 × O(total_chars). Alternative: single hash map with both name and number as keys, but no prefix search. Two tries enable: search by name prefix O(p), search by number prefix O(p). Total space: ~2× single trie but enables dual prefix search. Used in: contact apps, business directories.",1,published,medium,apply,blank,dsa,blank,blank,blank,Single trie sufficient for both,Two separate tries for name and number prefix searches,Hash table handles both,Trie cannot store phone numbers,2
+Boggle Game Solver,"**Boggle: 4×4 grid with letters, find all dictionary words by moving to adjacent cells. Dictionary: 100K words. Naive: DFS from each cell checking each word O(16 × 8^max_len × 100K). How does trie + DFS optimize?**
+
+```python
+def find_words(board, trie):
+    results = set()
+    
+    def dfs(i, j, node, path):
+        if node.is_end:
+            results.add(path)
+        
+        char = board[i][j]
+        if char not in node.children:
+            return  # No words with this prefix, prune
+        
+        board[i][j] = '#'  # Mark visited
+        for di, dj in [(0,1),(1,0),(0,-1),(-1,0)]:
+            ni, nj = i+di, j+dj
+            if valid(ni, nj) and board[ni][nj] != '#':
+                dfs(ni, nj, node.children[char], path + char)
+        board[i][j] = char  # Restore
+```
+
+**Why does trie pruning dramatically reduce search space?**","DFS explores path only if it forms valid trie prefix. Invalid path: prune entire subtree. Example: path 'xyz' not in trie, stop immediately vs checking all 100K words for 'xyz*' pattern. Single DFS finds all valid words simultaneously. Time: O(cells × 4^depth) but massive pruning. Without trie: O(cells × branches^depth × dictionary_size). Trie-based pruning reduces exponential branching.",1,published,hard,analyze,blank,dsa,blank,blank,blank,Hash set more efficient,Trie prunes invalid prefixes early eliminating exponential branches,Sorting dictionary improves search,Brute force comparable performance,2
+Trie Node Deletion Memory,"**After deleting 50K words from 100K-word trie, many nodes become orphaned (no words pass through). Memory still allocated. What strategy reclaims space?**","Deletion marks is_end=False but doesn't free nodes with children (shared prefixes). Orphaned nodes: no descendants with is_end=True. Strategy: during deletion, bottom-up check if node can be freed (no children, not terminal). Alternatively: periodic garbage collection traversing entire trie, freeing orphans. Lazy deletion: fast but accumulates dead nodes. Eager reclamation: slower per deletion but maintains memory. Trade-off: time vs space.",1,published,medium,understand,blank,dsa,blank,blank,blank,Deleted nodes automatically freed,Bottom-up deletion checking for orphaned nodes or periodic GC,Memory cannot be reclaimed,Requires trie rebuild,2
+Ternary Search Trie,"**Ternary search trie (TST): each node has 3 children (left: char < current, middle: char = current, right: char > current). For English dictionary, what's the space advantage over array trie?**","Array trie: 26 pointers per node (676 bytes with 8-byte pointers). Many NULL for sparse nodes. TST: 3 pointers + 1 char (32 bytes per node). Space: ~20x reduction. Time: O(L) becomes O(L log ALPHABET_SIZE) due to binary search at each level. Trade-off: TST uses less space but slightly slower. For large alphabets (Unicode) or sparse data, TST superior. Array better for dense, small alphabet.",1,published,hard,understand,blank,dsa,blank,blank,blank,TST uses more space than array,TST uses ~20x less space with 3 pointers vs 26 array pointers,Both structures use equal space,TST only works for numbers,2
+Autocomplete With Ranking,"**Search autocomplete returns top 5 results by popularity. Trie nodes store frequency counts. For prefix 'face', must traverse entire subtree to find top 5. What optimization enables O(1) top-k retrieval?**
+
+```python
+class TrieNode:
+    def __init__(self):
+        self.children = {}
+        self.is_end = False
+        self.top_k = []  # Maintain top k results at each node
+    
+def insert_with_frequency(root, word, freq):
+    node = root
+    for char in word:
+        if char not in node.children:
+            node.children[char] = TrieNode()
+        node = node.children[char]
+        # Update top_k at each node on path
+        update_top_k(node.top_k, word, freq, k=5)
+    node.is_end = True
+```
+
+**What's the space-time trade-off?**","Store top-k results at each node. Insertion: O(L×k) updating top-k at each level. Query: O(p) traverse prefix, return stored top-k O(1). Space: O(nodes×k) storing k results per node. Trade-off: O(k) space per node for O(1) query vs O(subtree_size) traversal. For frequent queries, caching top-k worthwhile. Updates expensive: must propagate frequency changes. Used in: Google suggest, search engines.",1,published,hard,analyze,blank,dsa,blank,blank,blank,Cannot optimize better than O(k),Store top-k at each node for O(1) query with O(nodes×k) space,Heap structure more efficient,Requires separate index,2
+Wildcard Pattern Matching,"**Pattern matching: 'h?t' matches 'hat', 'hot', 'hit' (? matches any char). 'h*t' matches 'hat', 'heart', 'ht' (* matches 0+ chars). How does trie handle both wildcards?**","For '?': try all ALPHABET_SIZE branches at that position. For '*': try 0 chars (skip *), 1 char (advance position), 2 chars, etc. Recursive exploration with backtracking. Time: exponential in wildcards. '?' simpler: O(ALPHABET_SIZE) branches. '*' complex: O(ALPHABET_SIZE^remaining_length) worst case. Most regex engines use NFA/DFA, not tries. Trie with wildcards useful for limited wildcard queries, not general regex.",1,published,hard,understand,blank,dsa,blank,blank,blank,"Trie handles both equally O(L)","'?' needs O(ALPHABET_SIZE) branches; '*' potentially exponential backtracking",Wildcards impossible in trie,Hash table better for patterns,2
